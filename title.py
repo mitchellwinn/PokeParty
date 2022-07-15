@@ -31,10 +31,10 @@ async def titleGo():
 	playMusic("08 Cerulean City's Theme.mp3")
 
 async def cyclePokemon():
-	findByName("titlePokemon").addComponent(Sprite(str(random.randint(1,15))+".gif","pokemon\\"),"sprite")
+	findByName("titlePokemon").addComponent(Sprite(str(random.randint(1,151))+".gif","pokemon\\"),"sprite")
 	while game.gameState == "title":
 		await(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*.4,game.windowDimensions[1]*.775],.45))
 		await asyncio.sleep(2)
 		await(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],.9))
 		findByName("titlePokemon").transform.position=[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]
-		findByName("titlePokemon").getNamedComponent("sprite").fileChange(str(random.randint(1,15))+".gif")
+		findByName("titlePokemon").getNamedComponent("sprite").fileChange(str(random.randint(1,151))+".gif")
