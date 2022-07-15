@@ -1,3 +1,3 @@
 # PokeParty
-Pokemon boardgame made using Python
+Pokemon board game made using Python
 Run the start.py script to play
