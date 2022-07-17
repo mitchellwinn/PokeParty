@@ -98,14 +98,18 @@ def updateDisplay():
 
 def drawSprites(sprite,gobj):
 	global screen
-	sprite.img = pg.image.load(sprite.filePath+sprite.file)
+	if sprite.fileType == "png":
+		sprite.img = pg.image.load(sprite.filePath+sprite.file)
+	elif sprite.fileType =="gif":
+		#sprite.img = pg.image.load(sprite.filePath+sprite.file)
+		sprite.gifCheck()
 	img = pg.transform.scale(sprite.img, (sprite.img.get_rect().width*scale, sprite.img.get_rect().height*scale))
 	screen.blit(img,img.get_rect(center=(round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale)))
 
 def drawText(text,gobj):
 	global screen
-	print("attempting to render "+text.text+" in "+text.file)
-	font = pg.font.Font(text.filePath+text.file,round(16*(scale/2)))
+	#print("attempting to render "+text.text+" in "+text.file)
+	font = pg.font.Font(text.filePath+text.file,round(text.size*(scale/2)))
 	img = font.render(text.text, True, (0,0,0), (255,255,255))
 	rect = img.get_rect()
 	rect.center = gobj.transform.position[0]*scale,gobj.transform.position[1]*scale

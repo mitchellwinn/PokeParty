@@ -3,7 +3,7 @@
 #------------------------------
 import game
 import asyncio
-from title import titleGo
+from title import titleGo, titleMenu
 
 async def taskMain():
 	game.__init__()
@@ -13,6 +13,7 @@ async def taskMain():
 	print("Attempting titleGo()")
 	await titleGo()
 	print("Awaiting termination: press ESC")
+	await titleMenu()
 	while(game.programLive):
 		await asyncio.sleep(0)
 
