@@ -15,8 +15,10 @@ async def taskMain():
 	print("Awaiting termination: press ESC")
 	await titleMenu()
 	while(game.programLive):
+		if(game.gameState=="title"):
+			await titleGo()
+			await titleMenu()
 		await asyncio.sleep(0)
 
 
 asyncio.run(taskMain())
-

@@ -11,3 +11,7 @@ class Text(object):
 			self.size = args[2]
 		else:
 			self.size =16
+		if len(args)>=4:
+			self.anchor = args[3]
+		else:
+			self.anchor = "center"

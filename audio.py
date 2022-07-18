@@ -14,3 +14,6 @@ def playMusic(musicName):
 	pg.mixer.music.load(filepath+musicName)
 	pg.mixer.music.set_volume(game.volume*1.5)
 	pg.mixer.music.play(-1)
+
+def stopMusic():
+	pg.mixer.music.stop()
