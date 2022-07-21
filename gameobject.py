@@ -23,9 +23,12 @@ class GameObject(object):
 			self.name = args[0]
 			self.transform = transform.Transform(args[1],args[2],args[3])
 		print("new GameObject "+self.name+" initialized at:\n"+str(self.transform.position))
+		self.networkID=-1
 
 	def addComponent(self, component, name):
 		self.components.append([component,name]);
+		game.frame = 0
+		game.updateDisplay()
 
 	def getNamedComponent(self, name):
 		for i in self.components:

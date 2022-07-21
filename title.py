@@ -63,7 +63,7 @@ async def titleMenu():
 	findByName("menu2").destroy()
 
 async def cyclePokemon():
-	findByName("titlePokemon").addComponent(Sprite(str(random.randint(1,151))+".gif","pokemon\\","gif"),"sprite")
+	findByName("titlePokemon").addComponent(Sprite(str(random.randint(1,251))+".gif","pokemon\\","gif"),"sprite")
 	while game.gameState == "title":
 		await(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*.45,game.windowDimensions[1]*.775],.45))
 		await asyncio.sleep(.3)
@@ -75,7 +75,7 @@ async def cyclePokemon():
 			return
 		await(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],.9))
 		findByName("titlePokemon").transform.position=[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]
-		findByName("titlePokemon").getNamedComponent("sprite").fileChange(str(random.randint(1,151))+".gif")
+		findByName("titlePokemon").getNamedComponent("sprite").fileChange(str(random.randint(1,251))+".gif")
 		findByName("titlePokemon").getNamedComponent("sprite").gifInit()
 	findByName("title").destroy()
 	findByName("titlePokemon").destroy()

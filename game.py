@@ -7,18 +7,19 @@ ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 #all global variables to be used by game
 def __init__():
-	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full
+	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border
 	timestep = 1/60
 	gameObjects = []
 	scale=2
 	windowDimensions = [160,144]
 	programLive = True
 	volume = .1
+	frame = 0
 	full = False
-
+	border = pg.image.load("sprites\\frame.png")
+	border = pg.transform.scale(border, (border.get_rect().width*4, border.get_rect().height*4))
 #update playrInput global variable to be used throughout program
 def playerInputsGet():
-	global gameObjects, timestep, playerInputs, programLive, windowDimensions
 	inputsFalse = [False,False,False,False,False,False,False,False,False,False]
 	inputs = inputsFalse
 	events = pg.event.get()
@@ -45,17 +46,12 @@ def playerInputsGet():
 				inputs[8] = True
 			elif event.key == pg.K_x:
 				inputs[9] = True
-	try:
-		inputs	
-		return inputs
-	except:
-		#print("no inputs to return")
-		return inputsFalse
+	return inputs
 
 #main operations of pygame
 async def gameMain():
 	#gameMain is called once
-	global gameObjects, timestep, playerInputs, programLive, windowDimensions, screen, scale, gameState
+	global gameObjects, timestep, playerInputs, programLive, windowDimensions, screen, scale, gameState, frame
 	#pygame window is initialized with base dimensions
 	pg.init()
 	img = pg.image.load('sprites\\windowIcon.png')
@@ -78,11 +74,12 @@ async def gameMain():
 		#game is computed at 60fps
 		updateDisplay()
 		await asyncio.sleep(timestep)
+		frame+=1
 	pg.display.quit()
 	quit()
 
 def zoom(amount):
-	global scale, screen, full
+	global scale, screen, full, frame
 	if(full):
 		return
 	scale += amount
@@ -92,25 +89,31 @@ def zoom(amount):
 		scale = 4
 	else:
 		screen = pg.display.set_mode(size=(windowDimensions[0]*scale, windowDimensions[1]*scale), flags=0, depth=0, display=0, vsync=0)
+	frame = 0
+	updateDisplay()
 
 def fullscreen():
-	global full, screen, scale, windowDimensions
+	global full, screen, scale, windowDimensions, frame
 	if full:
 		scale = 2
 		screen = pg.display.set_mode(size=(windowDimensions[0]*scale, windowDimensions[1]*scale), flags=0, depth=0, display=0, vsync=0)
 		full = False
+		frame = 0
+		updateDisplay()
 		
 	else:
 		scale = 4
 		screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
 		full = True
+		frame = 0
+		updateDisplay()
 		
 
 def instantiate(name,position):
 	gameObjects.append(GameObject(name,position))
 
 def updateDisplay():
-	global screen, scale, full,w ,h
+	global screen, scale, full,w ,h, frame, border
 	w, h = screen.get_size()
 	screen.fill([255,255,255])
 	for gobj in gameObjects:
@@ -119,17 +122,16 @@ def updateDisplay():
 		if gobj.getNamedComponent("text")!=-1:
 			drawText(gobj.getNamedComponent("text"),gobj)
 	if full:
-		border = pg.image.load("sprites\\frame.png")
-		border = pg.transform.scale(border, (border.get_rect().width*scale, border.get_rect().height*scale))
 		screen.blit(border,border.get_rect(center=((w/2),(h/2))))	
 	pg.display.update()
 
 def drawSprites(sprite,gobj):
-	global screen, full, scale, w, h
-	if sprite.fileType == "png":
-		sprite.img = pg.image.load(sprite.filePath+sprite.file)
-	elif sprite.fileType =="gif":
-		sprite.gifCheck()
+	global screen, full, scale, w, h, frame
+	if frame % 5 == 0:	
+		if sprite.fileType == "png":
+			sprite.img = pg.image.load(sprite.filePath+sprite.file)
+		elif sprite.fileType =="gif":
+			sprite.gifCheck()
 	img = pg.transform.scale(sprite.img, (sprite.img.get_rect().width*scale, sprite.img.get_rect().height*scale))
 	if full == False:
 		screen.blit(img,img.get_rect(center=(round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale)))
@@ -137,27 +139,28 @@ def drawSprites(sprite,gobj):
 		screen.blit(img,img.get_rect(center=(round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2)))
 
 def drawText(text,gobj):
-	global screen, w, h, full, scale
+	global screen, w, h, full, scale, frame
 	#print("attempting to render "+text.text+" in "+text.file)
-	font = pg.font.Font(text.filePath+text.file,round(text.size*(scale/2)))
-	img = font.render(text.text, True, (0,0,0), (255,255,255))
-	rect = img.get_rect()
+	if frame % 5 == 0:	
+		text.font = pg.font.Font(text.filePath+text.file,round(text.size*(scale/2)))
+		text.img = text.font.render(text.text, True, (0,0,0), (255,255,255))
+		text.rect = text.img.get_rect()
 	if(text.anchor == "center"):
-		rect.center = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
+		text.rect.center = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
 	elif(text.anchor == "left"):
-		rect.midleft = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
+		text.rect.midleft = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
 	elif(text.anchor == "right"):
-		rect.midright = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
+		text.rect.midright = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
 	if full == False:
-		screen.blit(img,rect)
+		screen.blit(text.img,text.rect)
 	elif full == True:
 		if(text.anchor == "center"):
-			rect.center = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
+			text.rect.center = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
 		elif(text.anchor == "left"):
-			rect.midleft = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
+			text.rect.midleft = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
 		elif(text.anchor == "right"):
-			rect.midright = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
-		screen.blit(img,rect)
+			text.rect.midright = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
+		screen.blit(text.img,text.rect)
 
 #---USEFUL MODULE FUNCTIONS FOR ALL GAMES---------------------------------------------------------------------
 

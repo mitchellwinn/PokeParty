@@ -10,9 +10,9 @@ class Sprite(object):
 
 
 	def gifInit(self):
-		self.waitFrames = 4
+		self.waitFrames = 0
 		self.framesWaited = 0
-		self.frame = 1
+		self.frame = 0
 		self.PILimg = Image.open(self.filePath+self.file)
 		self.frames = []
 		for i in ImageSequence.Iterator(self.PILimg):

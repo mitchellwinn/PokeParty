@@ -4,6 +4,7 @@ import asyncio
 class Text(object):
 
 	def __init__(self,*args):
+		global  rect, img, font
 		self.filePath = "fonts\\"
 		self.file=args[1]
 		self.text=args[0]
@@ -15,3 +16,4 @@ class Text(object):
 			self.anchor = args[3]
 		else:
 			self.anchor = "center"
+		

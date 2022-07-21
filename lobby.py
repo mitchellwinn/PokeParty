@@ -60,7 +60,7 @@ async def host():
 			game.gameObjects.clear()
 			return
 		if ready==False:
-			findByName("titleText2").getNamedComponent("text").text = "Press'R' to READY"
+			findByName("titleText2").getNamedComponent("text").text = "Press 'R' to READY"
 		else:
 			findByName("titleText2").getNamedComponent("text").text = "READY!"
 		await asyncio.sleep(game.timestep)
