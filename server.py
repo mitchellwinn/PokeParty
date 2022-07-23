@@ -1,6 +1,7 @@
 import socket
 import pickle
 import asyncio
+import aioconsole
 from room import Room
 from gameobject import GameObject
 from client import SimpleData
@@ -103,10 +104,11 @@ async def handleClient(conn, addr):
 	conn.close()
 
 async def listenForInput():
+	print("ESC to stop server")
 	while(True):
-		thisInput = input('Enter a command for the server (type \'stop\' to quit!):')
-		if(thisInput == "stop" or thisInput == "quit"):
-			quit()
-		else:
-			print(f"No such command \'{thisInput}\' exists.")
+		events = pg.event.get()
+			for event in events:
+				if event.type == pg.KEYDOWN:
+					if event.key == pg.K_ESCAPE:
+						quit()
 asyncio.run(startServer())
