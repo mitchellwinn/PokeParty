@@ -8,6 +8,7 @@ from client import SimpleData
 import pygame as pg
 
 async def startServer():
+	pg.init()
 	asyncio.create_task(listenForInput())
 	global rooms, DISCONNECT_MESSAGE, s
 	rooms = []
