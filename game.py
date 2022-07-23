@@ -2,12 +2,12 @@ import pygame as pg
 import asyncio
 import ctypes
 import random
-myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 #all global variables to be used by game
 def __init__():
 	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject , otherPlayers, allPlayers
+	myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+	ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 	timestep = 1/60
 	gameObjects = []
 	otherPlayers = []
