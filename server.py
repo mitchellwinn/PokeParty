@@ -107,8 +107,9 @@ async def listenForInput():
 	print("ESC to stop server")
 	while(True):
 		events = pg.event.get()
-			for event in events:
-				if event.type == pg.KEYDOWN:
-					if event.key == pg.K_ESCAPE:
-						quit()
+		for event in events:
+			if event.type == pg.KEYDOWN:
+				if event.key == pg.K_ESCAPE:
+					quit()
+
 asyncio.run(startServer())
