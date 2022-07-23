@@ -30,6 +30,13 @@ class GameObject(object):
 		game.frame = 0
 		game.updateDisplay()
 
+	def removeComponent(self, name):
+		for i in self.components:
+			if i[1]==name:
+				self.components.remove(i);
+		game.frame = 0
+		game.updateDisplay()
+
 	def getNamedComponent(self, name):
 		for i in self.components:
 			if i[1]==name:

@@ -5,7 +5,7 @@ from gameobject import GameObject, findByName
 from sprite import Sprite
 from text import Text
 from audio import playSound, playMusic, stopMusic
-from lobby import join, host
+from lobby import join
 
 async def titleGo():
 	#print("Triggered titleGo from game.py")
@@ -27,15 +27,15 @@ async def titleGo():
 	game.gameObjects.append(GameObject("title",[game.windowDimensions[0]/2,0]))
 	findByName("title").addComponent(Sprite("title1black.png","title\\"),"sprite")
 	await(findByName("title").transform.moveOverTime([game.windowDimensions[0]/2,game.windowDimensions[1]/3],.45))
-	findByName("title").getNamedComponent("sprite").file = "title1.png"
+	findByName("title").getNamedComponent("sprite").fileChange("title1.png")
 
 async def titleMenu():
 	game.gameObjects.append(GameObject("menu1",[game.windowDimensions[0]*.85,game.windowDimensions[1]*.715]))
 	game.gameObjects.append(GameObject("menu2",[game.windowDimensions[0]*.85,game.windowDimensions[1]*.79]))
 	game.gameObjects.append(GameObject("pointer",[game.windowDimensions[0]*.725,game.windowDimensions[1]*.715]))
 	findByName("pointer").addComponent(Sprite("pointer.png",""),"sprite")
-	findByName("menu1").addComponent(Text("HOST","pokemon1.ttf"),"text")
-	findByName("menu2").addComponent(Text("JOIN","pokemon1.ttf"),"text")
+	findByName("menu1").addComponent(Text("PLAY","pokemon1.ttf"),"text")
+	findByName("menu2").addComponent(Text("EXIT","pokemon1.ttf"),"text")
 	await asyncio.sleep(.25)
 	playMusic("08 Cerulean City's Theme.mp3")
 	choice = 0
@@ -50,12 +50,13 @@ async def titleMenu():
 			choice = 0
 		if game.playerInputs[7]==True:
 			playSound("SFX_PRESS_AB.wav")
-			game.gameState = "lobby"
 			game.gameObjects.clear()
 			if choice==0:
-				await (host())
+				game.gameState = "lobby"
+				asyncio.create_task(join())
 			if choice==1:
-				await (join())
+				await asyncio.sleep(.25)
+				game.programLive = False
 			return
 		findByName("pointer").transform.position = [game.windowDimensions[0]*.725,game.windowDimensions[1]*(.715+(choice*.075))]
 		await asyncio.sleep(0)
@@ -76,7 +77,7 @@ async def cyclePokemon():
 		await(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],.9))
 		findByName("titlePokemon").transform.position=[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]
 		findByName("titlePokemon").getNamedComponent("sprite").fileChange(str(random.randint(1,251))+".gif")
-		findByName("titlePokemon").getNamedComponent("sprite").gifInit()
+		#findByName("titlePokemon").getNamedComponent("sprite").gifInit()
 	findByName("title").destroy()
 	findByName("titlePokemon").destroy()
 	findByName("titleTrainer").destroy()

@@ -7,9 +7,11 @@ ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 #all global variables to be used by game
 def __init__():
-	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border
+	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject , otherPlayers, allPlayers
 	timestep = 1/60
 	gameObjects = []
+	otherPlayers = []
+	allPlayers = []
 	scale=2
 	windowDimensions = [160,144]
 	programLive = True
@@ -44,7 +46,7 @@ def playerInputsGet():
 				inputs[7] = True
 			elif event.key == pg.K_F11:
 				inputs[8] = True
-			elif event.key == pg.K_x:
+			elif event.key == pg.K_BACKQUOTE:
 				inputs[9] = True
 	return inputs
 
@@ -76,6 +78,8 @@ async def gameMain():
 		await asyncio.sleep(timestep)
 		frame+=1
 	pg.display.quit()
+	if playerObject.getNamedComponent("client")!=-1:
+		playerObject.getNamedComponent("client").send("!DISCONNECT")
 	quit()
 
 def zoom(amount):
@@ -128,9 +132,7 @@ def updateDisplay():
 def drawSprites(sprite,gobj):
 	global screen, full, scale, w, h, frame
 	if frame % 5 == 0:	
-		if sprite.fileType == "png":
-			sprite.img = pg.image.load(sprite.filePath+sprite.file)
-		elif sprite.fileType =="gif":
+		if sprite.fileType == "gif":
 			sprite.gifCheck()
 	img = pg.transform.scale(sprite.img, (sprite.img.get_rect().width*scale, sprite.img.get_rect().height*scale))
 	if full == False:

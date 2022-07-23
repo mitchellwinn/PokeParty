@@ -1,13 +1,8 @@
 import pygame as pg
+import game
 from PIL import Image, ImageSequence
 
 class Sprite(object):
-
-
-	def fileChange(self, file):
-		self.file=file
-		self.img = pg.image.load(self.filePath+self.file)
-
 
 	def gifInit(self):
 		self.waitFrames = 0
@@ -22,6 +17,16 @@ class Sprite(object):
 			toAppend = pg.image.fromstring(data,size,mode)
 			self.frames.append(toAppend)
 		self.playing = False
+		self.img = self.frames[self.frame]
+
+	def fileChange(self, file):
+		self.file=file
+		if file.count(".gif")==	0:
+			self.fileType = "png"
+			self.img = pg.image.load(self.filePath+self.file)
+		else: 
+			self.fileType="gif"
+			self.gifInit()
 
 	def gifCheck(self):
 		if self.playing==False:
@@ -37,12 +42,10 @@ class Sprite(object):
 
 	def __init__(self,*args):
 		self.filePath = "sprites\\"+args[1]
-		self.file=args[0]
-		self.img = pg.image.load(self.filePath+self.file)
+		#self.img = pg.image.load(self.filePath+self.file)
 		if len(args)>2:
 			self.fileType = args[2]
 		else:
 			self.fileType = "png"
-		if(self.fileType=="gif"):
-			self.gifInit()
+		self.fileChange(args[0])
 
