@@ -19,13 +19,13 @@ async def startServer():
 	except socket.error as e:
 		print(f"[SOCKET ERROR]: {e}")
 	s.listen()
-	While True:
+	while True:
 		conn, addr = s.accept()
 		asyncio.create_task(handleClient(conn, addr))
 		clients = 0
 		count = 0
 		for i in asyncio.Task.all_tasks():
-			if(i.done())
+			if(i.done()):
 				return
 			count+=1
 		clientCount = count
@@ -57,7 +57,7 @@ def clientMsgInterpret(conn, addr, msg):
 	#-----
 	#-----check room status before player is allowed to join
 	elif msg.purpose=="ROOM":
-		bool roomAlreadyExists = False
+		roomAlreadyExists = False
 		for i in rooms:
 			if i.name == msg.desiredRoom:
 				thisRoom = i
@@ -67,7 +67,7 @@ def clientMsgInterpret(conn, addr, msg):
 			msg.room = msg.desiredRoom
 			thisRoom.players.append(msg.associatedObject)
 			rooms.append(thisRoom)
-		else
+		else:
 			msg.room = msg.desiredRoom
 			thisRoom.players.append(msg)
 		response = SimpleData("SETROOM",["msg.desiredRoom"])
@@ -93,19 +93,20 @@ async def handleClient(conn, addr):
 	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
 	while connected:
-            data = conn.recv(HEADER)
-            data = pickle.loads(data)
-        connected = clientMsgInterpret(conn, addr, data)
-        try data.purpose:
-        	print(f"client:{addr} sent message with purpose:{data.purpose}")
-    conn.close()
+		data = conn.recv(HEADER)
+		data = pickle.loads(data)
+		connected = clientMsgInterpret(conn, addr, data)
+		try:
+			print(f"client:{addr} sent message with purpose:{data.purpose}")
+		except:
+			asyncio.sleep(0)
+	conn.close()
 
 async def listenForInput():
-	thisInput = input('Enter a command for the server (type \'stop\' to quit!):')
 	while(True):
-		if(thisInput == "stop" or thisInput = "quit"):
+		thisInput = input('Enter a command for the server (type \'stop\' to quit!):')
+		if(thisInput == "stop" or thisInput == "quit"):
 			quit()
 		else:
 			print(f"No such command \'{thisInput}\' exists.")
-
 asyncio.run(startServer())
