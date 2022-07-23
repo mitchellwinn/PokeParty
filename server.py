@@ -18,7 +18,7 @@ async def startServer():
 	DISCONNECT_MESSAGE = "!DISCONNECT"
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	try:
-		s.bind((SERVER), PORT)
+		s.bind((SERVER, PORT))
 	except socket.error as e:
 		print(f"[SOCKET ERROR]: {e}")
 	s.listen()
