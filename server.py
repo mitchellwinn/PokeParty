@@ -6,6 +6,7 @@ from gameobject import GameObject
 from client import SimpleData
 
 async def startServer():
+	asyncio.create_task(listenForInput())
 	global rooms, DISCONNECT_MESSAGE, s
 	rooms = []
 	HEADER = 4096
@@ -88,12 +89,22 @@ def clientMsgInterpret(conn, addr, msg):
 	return connected
 
 async def handleClient(conn, addr):
-	print(f"[NEW CONNECTION] {addr} connected!") 
+	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
 	while connected:
             data = conn.recv(HEADER)
             data = pickle.loads(data)
         connected = clientMsgInterpret(conn, addr, data)
+        try data.purpose:
+        	print(f"client:{addr} sent message with purpose:{data.purpose}")
     conn.close()
+
+async def listenForInput():
+	thisInput = input('Enter a command for the server (type \'stop\' to quit!):')
+	while(True):
+		if(thisInput == "stop" or thisInput = "quit"):
+			quit()
+		else:
+			print(f"No such command \'{thisInput}\' exists.")
 
 asyncio.run(startServer())
