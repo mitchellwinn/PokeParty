@@ -5,6 +5,7 @@ import aioconsole
 from room import Room
 from gameobject import GameObject
 from client import SimpleData
+import pygame as pg
 
 async def startServer():
 	asyncio.create_task(listenForInput())
