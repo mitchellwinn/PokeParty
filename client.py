@@ -20,6 +20,7 @@ class Client(object):
         self.header = 4096
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.settimeout(3)
+        self.client.setblocking(False)
         self.host = '173.255.244.44'
         self.port = 1234
         self.addr = (self.host, self.port)
