@@ -62,7 +62,7 @@ def send(conn,data):
 def clientMsgInterpret(conn, addr, msg):
 	try:
 		print(f"The message's purpose: {msg.purpose}")
-	except
+	except:
 		return True
 	connected = True
 	#-----
