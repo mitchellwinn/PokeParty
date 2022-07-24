@@ -13,7 +13,7 @@ async def startServer():
 	except:
 		print("Failed to initialize Pygame")
 		quit()
-	global rooms, DISCONNECT_MESSAGE, s
+	global rooms, DISCONNECT_MESSAGE, s, HEADER
 	rooms = []
 	HEADER = 4096
 	SERVER = ''
@@ -108,6 +108,7 @@ def clientMsgInterpret(conn, addr, msg):
 	return connected
 
 async def handleClient(conn, addr):
+	global HEADER
 	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
 	while connected:

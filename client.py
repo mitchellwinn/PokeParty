@@ -39,9 +39,8 @@ class Client(object):
         try:
             print("trying to connect client")
             self.client.connect(self.addr)
-        except socket.error:
-            print("socket error ):")
-            self.connected = "FAILURE"
+        except socket.error as e:
+            self.connected = "[FAILURE]{e}"
             print(self.connected)
             return
         print("connection successful")
@@ -58,7 +57,12 @@ class Client(object):
         while connected:
             data = self.client.recv(HEADER)
             data = pickle.loads(data)
-            connected = serverMsgInterpret(data)
+            try:
+                connected = serverMsgInterpret(data)
+            except:
+                await asyncio.sleep(0)
+                continue
+            await asyncio.sleep(0)
         conn.close()
 
 
