@@ -40,12 +40,6 @@ async def startServer():
 		asyncio.create_task(handleClient(conn, addr))
 		clients = 0
 		count = 0
-		for i in asyncio.Task.all_tasks():
-			if(i.done()):
-				return
-			count+=1
-		clientCount = count
-		print(f"[ACTIVE CONNECTIONS]{clientCount}")
 		print("Awaiting connection from next client...")
 		await asyncio.sleep(0)
 
