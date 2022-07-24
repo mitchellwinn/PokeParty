@@ -122,8 +122,13 @@ async def handleClient(conn, addr):
 	conn.close()
 
 async def lfi():
+	print("[`~] key to stop server")
 	while(True):
-		input("Type a command:")
+		events = pg.event.get()
+		for event in events:
+			if event.type == pg.KEYDOWN:
+				if event.key == pg.K_BACKQUOTE:
+					quit()
 		await asyncio.sleep(0)
 
 asyncio.run(startServer())
