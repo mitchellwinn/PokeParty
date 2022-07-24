@@ -61,8 +61,15 @@ async def connectRoom(room):
 	else:
 		game.playerObject.removeComponent("client")
 		game.playerObject.addComponent(Client(room),"client")
+	hasRoom = False
 	while game.playerObject.getNamedComponent("client").connected == "UNDECIDCED":
 		await asyncio.sleep(0)
+	hasRoom = False
+	while(hasRoom==False):
+		try:
+			roomName = game.playerObject.getNamedComponent("client").room
+		except:
+			await asyncio.sleep(0)
 	if game.playerObject.getNamedComponent("client").connected=="FAILURE":
 		game.playerObject.removeComponent("client")
 		findByName("titleText").getNamedComponent("text").text = "Failed to reach Server!"
@@ -90,12 +97,6 @@ async def connectRoom(room):
 async def inRoom():
 	global roomName,ready
 	ready = False
-	hasRoom = False
-	while(hasRoom==False):
-		try:
-			roomName = game.playerObject.getNamedComponent("client").room
-		except:
-			await asyncio.sleep(0)
 	inputDone = False
 	await asyncio.sleep(.25)
 	playMusic("052 National Park.mp3")

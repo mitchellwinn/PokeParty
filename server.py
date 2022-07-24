@@ -121,7 +121,8 @@ async def handleClient(conn, addr):
 		try:
 			data = conn.recv(HEADER)
 		except:
-			break
+			await asyncio.sleep(0)
+			continue
 		data = pickle.loads(data)
 		connected = clientMsgInterpret(conn, addr, data)
 		try:
