@@ -59,7 +59,7 @@ async def connectRoom(room):
 	if game.playerObject.getNamedComponent("client")==-1:
 		game.playerObject.addComponent(Client(room),"client")
 	else:
-		playerObject.components.remove(game.playerObject.getNamedComponent("client"))
+		game.playerObject.components.remove(game.playerObject.getNamedComponent("client"))
 		game.playerObject.addComponent(Client(room),"client")
 	while game.playerObject.getNamedComponent("client").connected == "UNDECIDCED":
 		await asyncio.sleep(0)
@@ -72,9 +72,15 @@ async def connectRoom(room):
 		game.gameObjects.clear()
 		return
 	if len(game.allPlayers)==1:
-		findByName("titleText").getNamedComponent("text").text = "Successfully CREATED "+game.playerObject.getNamedComponent("client").room+"!"
+		findByName("titleText").getNamedComponent("text").text = f"Successfully CREATED {room}!{len(game.allPlayers)}/{4}"
+	elif len(game.allPlayers)>1:
+		findByName("titleText").getNamedComponent("text").text = f"Successfully JOINED {room}!{len(game.allPlayers)}/{4}"
 	else:
-		findByName("titleText").getNamedComponent("text").text = "Successfully JOINED "+game.playerObject.getNamedComponent("client").room+"!"
+		playSound("SFX_PRESS_AB.wav")
+		await asyncio.sleep(.75)
+		game.gameState = "title"
+		game.gameObjects.clear()
+		return
 	playSound("SFX_PRESS_AB.wav")
 	await asyncio.sleep(.75)
 	game.gameState = "inRoom"
@@ -84,7 +90,12 @@ async def connectRoom(room):
 async def inRoom():
 	global roomName,ready
 	ready = False
-	roomName = game.playerObject.getNamedComponent("client").room
+	hasRoom = False
+	while(hasRoom==False):
+		try:
+			roomName = game.playerObject.getNamedComponent("client").room
+		except:
+			await asyncio.sleep(0)
 	inputDone = False
 	await asyncio.sleep(.25)
 	playMusic("052 National Park.mp3")

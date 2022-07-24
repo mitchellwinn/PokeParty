@@ -60,6 +60,10 @@ def send(conn,data):
 
 
 def clientMsgInterpret(conn, addr, msg):
+	try:
+		print(f"The message's purpose: {msg.purpose}")
+	except
+		return True
 	connected = True
 	#-----
 	#-----disconnect client from server
@@ -112,7 +116,10 @@ async def handleClient(conn, addr):
 	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
 	while connected:
-		data = conn.recv(HEADER)
+		try:
+			data = conn.recv(HEADER)
+		except:
+			break
 		data = pickle.loads(data)
 		connected = clientMsgInterpret(conn, addr, data)
 		try:

@@ -49,8 +49,8 @@ class Client(object):
         asyncio.run(serverHandler())
         #attempt to join or create room
         send (self.getAsDataString("ROOM"))
-        #get an initial understanding of all other players currently in room
         send (self.getAsDataString("GETUPDATES"))
+        #get an initial understanding of all other players currently in room
  
 
     async def serverHandler():
