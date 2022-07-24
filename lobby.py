@@ -59,7 +59,7 @@ async def connectRoom(room):
 	if game.playerObject.getNamedComponent("client")==-1:
 		game.playerObject.addComponent(Client(room),"client")
 	else:
-		game.playerObject.components.remove(game.playerObject.getNamedComponent("client"))
+		game.playerObject.removeComponent("client")
 		game.playerObject.addComponent(Client(room),"client")
 	while game.playerObject.getNamedComponent("client").connected == "UNDECIDCED":
 		await asyncio.sleep(0)

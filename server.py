@@ -115,6 +115,8 @@ async def handleClient(conn, addr):
 	global HEADER
 	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
+	conn.settimeout(3)
+	conn.setblocking(False)
 	while connected:
 		try:
 			data = conn.recv(HEADER)
