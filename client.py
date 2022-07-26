@@ -17,33 +17,34 @@ class SimpleData(object):
 
 class Client(object):
 
-    def serverMsgInterpret(self, msg):
+    def serverHandler(self):
         connected = True
-        if msg.stirngs[0] == self.DISCONNECT_MESSAGE:
-            connected = False
-        elif msg.purpose == "SETROOM":
-            self.room = msg.strings[0]
-            print("updated room!")
-        elif msg[0].purpose == "GETUPDATES":
-            #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
-            for i in game.otherPlayers:
-                i.removeFromClient = True
-                for thisMsg in msg:
-                    if thisMsg.id == self.id:
-                        return
-                    referenceExists = False
-                    if i.id == thisMsg.id:
-                        referenceExists = True
-                        i.removeFromClient = False
-                        i = thisMsg
-                    elif referenceExists == False:
-                        game.otherPlayers.append(msg)
-                if(i.removeFromClient):
-                    game.otherPlayers.remove(i)
-            game.allPlayersInRoom = game.otherPlayers
-            game.allPlayersInRoom.append(game.playerObject)
-
-        return connected
+        while connected:
+            print("Waiting for message from server...")
+            msg = self.client.recv(self.header)
+            if msg.purpose == self.DISCONNECT_MESSAGE:
+                connected = False
+            elif msg.purpose == "SETROOM":
+                self.room = msg.strings[0]
+                print("updated room!")
+            elif msg[0].purpose == "GETUPDATES":
+                #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
+                for i in game.otherPlayers:
+                    i.removeFromClient = True
+                    for thisMsg in msg:
+                        if thisMsg.id == self.id:
+                            continue
+                        referenceExists = False
+                        if i.id == thisMsg.id:
+                            referenceExists = True
+                            i.removeFromClient = False
+                            i = thisMsg
+                        elif referenceExists == False:
+                            game.otherPlayers.append(msg)
+                    if(i.removeFromClient):
+                        game.otherPlayers.remove(i)
+                game.allPlayersInRoom = game.otherPlayers
+                game.allPlayersInRoom.append(game.playerObject)
 
     def send(self, data):
         try:
@@ -87,5 +88,6 @@ class Client(object):
             return
         print("connection successful")
         self.connected = "SUCCESS"
+        thread = Thread(target = self.serverHandler(),args=(self))
+        thread.Start 
         self.send (SimpleData("ROOM",[self.desiredRoom,self.id]).getAsDataString())
-        #self.send (self.getAsDataString("GETUPDATES"))
