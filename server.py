@@ -41,7 +41,7 @@ def send(conn,data):
 
 def clientMsgInterpret(conn, addr, msg):
 	try:
-		print(f"The message's purpose: {msg.purpose}")
+		print(f"Client:{addr} message's purpose: {msg.purpose}")
 	except:
 		return True
 	connected = True
@@ -51,7 +51,7 @@ def clientMsgInterpret(conn, addr, msg):
 		#remove player association from the room
 		for i in rooms:
 			for k in i.players:
-				if k == msg.id:
+				if k.ADDRESS == msg.ADDRESS:
 					i.players.remove(k)
 		response = SimpleData("!DISCONNECT",[""])
 		send(conn, response.getAsDataStringInput())
@@ -59,6 +59,7 @@ def clientMsgInterpret(conn, addr, msg):
 	#-----
 	#-----check room status before player is allowed to join
 	elif msg.purpose=="ROOM":
+		print(f"Checking to see if room already exists...")
 		roomAlreadyExists = False
 		for i in rooms:
 			if i.name == msg.strings[0]:
