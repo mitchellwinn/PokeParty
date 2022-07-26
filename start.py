@@ -22,6 +22,7 @@ async def taskMain():
 			await titleGo()
 			await titleMenu()
 		await asyncio.sleep(0)
+	quit()
 
 
 asyncio.run(taskMain())
