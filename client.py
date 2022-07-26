@@ -50,9 +50,12 @@ class Client(object):
         try:
             #send desired communication to server
             self.client.send(data)
+            print(f"Sent data to server!\nWaiting on response...!")
             #get desired communication from server
             reply = self.client.recv(self.header)
+            print(f"Got response from server!")
             reply = pickle.loads(reply)
+            print(f"Purpose: {msg.purpose}")
             #interpret the reply and do something client sided in response
             serverMsgInterpret(reply)
             return reply
@@ -64,10 +67,10 @@ class Client(object):
         self.connected = "UNDECIDED"
         self.header = 4096
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #self.client.settimeout(3)
         self.host = '173.255.244.44'
         self.port = 1234
         self.addr = (self.host, self.port)
+        self.ADDRESS = ""
         self.desiredRoom = room
         self.connect()
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -88,6 +91,4 @@ class Client(object):
             return
         print("connection successful")
         self.connected = "SUCCESS"
-
-        #self.serverHandler()
         self.send (SimpleData("ROOM",[self.desiredRoom,self.id]).getAsDataString())
