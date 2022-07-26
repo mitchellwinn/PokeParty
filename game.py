@@ -4,6 +4,7 @@ import ctypes
 import random
 from sprite import Sprite
 from gameobject import findByName, GameObject
+from client import SimpleData
 
 #all global variables to be used by game
 def __init__():
@@ -101,8 +102,10 @@ async def gameMain():
 		await asyncio.sleep(timestep)
 		frame+=1
 	pg.display.quit()
-	if playerObject.getNamedComponent("client")!=-1:
-		playerObject.getNamedComponent("client").send("!DISCONNECT")
+	try:
+		playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[""]).getAsDataString())
+	except:
+		print("Not a client to a server.")
 	quit()
 
 async def volumeMod(amount):

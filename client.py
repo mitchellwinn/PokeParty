@@ -6,7 +6,7 @@ import game
 
 
 class SimpleData(object):
-    def _init_(self, purpose, strings):
+    def __init__(self, purpose, strings):
         self.purpose = purpose
         self.strings = []
 
@@ -67,8 +67,8 @@ class Client(object):
         self.host = '173.255.244.44'
         self.port = 1234
         self.addr = (self.host, self.port)
-        self.id = self.connect()
         self.desiredRoom = room
+        self.connect()
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
 
     def getAsDataString(self, purpose):
@@ -80,12 +80,12 @@ class Client(object):
 
     def connect(self):
         try:
-            self.client.connect(self.addr)
+            self.id =  self.client.connect(self.addr)
         except:
             print("connection unsuccessful")
             self.connected = "FAILURE"
             return
         print("connection successful")
         self.connected = "SUCCESS"
-        self.send (self.getAsDataString(SimpleData("ROOM",[self.desiredRoom,self.id[1]])))
+        self.send (SimpleData("ROOM",[self.desiredRoom,self.id]).getAsDataString())
         #self.send (self.getAsDataString("GETUPDATES"))
