@@ -20,7 +20,7 @@ class Client(object):
         self.connected = "UNDECIDED"
         self.header = 4096
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(3)
+        #self.client.settimeout(3)
         self.host = '173.255.244.44'
         self.port = 1234
         self.addr = (self.host, self.port)
@@ -32,6 +32,7 @@ class Client(object):
         self.purpose = purpose
         self.associatedObject = game.playerObject
         dataString = pickle.dumps(self)
+        print(data)
         return dataString
 
     def connect(self):
@@ -39,7 +40,7 @@ class Client(object):
         try:
             print("trying to connect client")
             self.client.connect(self.addr)
-            reply = self.client.recv(2048).decode()
+            reply = self.client.recv(self.header).decode()
         except socket.error as e:
             self.connected = "FAILURE"
             print(self.connected+f"{e}")

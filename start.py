@@ -18,6 +18,7 @@ async def taskMain():
 	await titleMenu()
 	while(game.programLive):
 		if game.gameState=="title":
+			game.frame = 0
 			await titleGo()
 			await titleMenu()
 		await asyncio.sleep(0)

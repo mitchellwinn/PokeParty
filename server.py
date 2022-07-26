@@ -96,6 +96,7 @@ def handleClient(conn, addr):
 	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
 	while connected:
+		print(f"client:{addr} receiving data...")
 		data = conn.recv(HEADER)
 		try:
 			data = pickle.loads(data)

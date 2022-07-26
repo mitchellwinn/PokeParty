@@ -19,7 +19,7 @@ def __init__():
 	windowDimensions = [160,144]
 	programLive = True
 	volume = .1
-	gameVolume = 4
+	gameVolume = 1
 	frame = 0
 	full = False
 	border = pg.image.load("sprites\\frame.png")
@@ -204,12 +204,15 @@ def drawText(text,gobj):
 		text.font = pg.font.Font(text.filePath+text.file,round(text.size*(scale/2)))
 		text.img = text.font.render(text.text, True, (0,0,0), (255,255,255))
 		text.rect = text.img.get_rect()
-	if(text.anchor == "center"):
-		text.rect.center = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
-	elif(text.anchor == "left"):
-		text.rect.midleft = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
-	elif(text.anchor == "right"):
-		text.rect.midright = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
+	try:
+		if(text.anchor == "center"):
+			text.rect.center = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
+		elif(text.anchor == "left"):
+			text.rect.midleft = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
+		elif(text.anchor == "right"):
+			text.rect.midright = [round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale]
+	except:
+		print("")
 	if full == False:
 		screen.blit(text.img,text.rect)
 	elif full == True:

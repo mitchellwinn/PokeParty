@@ -77,6 +77,7 @@ def connectRoom(room):
 	elif len(game.allPlayers)>1:
 		findByName("titleText").getNamedComponent("text").text = f"Successfully JOINED {room}!{len(game.allPlayers)}/{4}"
 	else:
+		findByName("titleText").getNamedComponent("text").text = f"Error occured initializing room!"
 		playSound("SFX_PRESS_AB.wav")
 		time.sleep(.75)
 		#game.gameState = "title"
