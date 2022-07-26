@@ -61,16 +61,16 @@ def clientMsgInterpret(conn, addr, msg):
 	elif msg.purpose=="ROOM":
 		print(f"Checking to see if room already exists...")
 		roomAlreadyExists = False
-		try:
-			for i in rooms:
-				if i.name == msg.strings[0]:
-					thisRoom = i
-					print(f"The requested room {msg.strings[1]} already exists...")
-					roomAlreadyExists = True
-		except:
-			print("Something went wrong checking for i in rooms!!")
+		for i in rooms:
+			if i.name == msg.strings[0]:
+				thisRoom = i
+				print(f"The requested room {msg.strings[0]} already exists...")
+				roomAlreadyExists = True
 		if roomAlreadyExists == False:
-			print(f"The requested room {msg.strings[1]} does not yet exist...")
+			try:
+				print(f"The requested room {msg.strings[0]} does not yet exist...")
+			except:
+				print("error with msg.strings")
 			thisRoom = Room(msg.strings[0])
 			thisClient = Client(msg.strings[0])
 			thisClient.ADDRESS = msg.strings[1]
