@@ -2,6 +2,7 @@ import socket
 import pickle
 import asyncio
 import game
+from threading import Thread
 
 
 
@@ -17,13 +18,13 @@ class SimpleData(object):
 
 class Client(object):
 
-    def serverHandler(self):
-        connected = True
-        while connected:
-            print("Waiting for message from server...")
+    def getServerMessage(self):
+        print("Waiting for message from server...")
             msg = self.client.recv(self.header)
             if msg.purpose == self.DISCONNECT_MESSAGE:
-                connected = False
+                game.gameObjects.clear()
+                game.gameState = "title"
+                del(self)
             elif msg.purpose == "SETROOM":
                 self.room = msg.strings[0]
                 print("updated room!")
@@ -88,6 +89,7 @@ class Client(object):
             return
         print("connection successful")
         self.connected = "SUCCESS"
-        thread = Thread(target = self.serverHandler(),args=(self))
-        thread.Start 
+
+        #self.serverHandler()
         self.send (SimpleData("ROOM",[self.desiredRoom,self.id]).getAsDataString())
+        self.getServerMessage()

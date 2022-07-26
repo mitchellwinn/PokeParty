@@ -105,7 +105,7 @@ async def gameMain():
 	try:
 		playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[""]).getAsDataString())
 	except:
-		print("Not a client to a server.")
+		print("Failed to send !DISCONNECT message")
 	quit()
 
 async def volumeMod(amount):

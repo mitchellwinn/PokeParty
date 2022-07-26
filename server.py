@@ -53,7 +53,7 @@ def clientMsgInterpret(conn, addr, msg):
 			for k in i.players:
 				if k == msg.id:
 					i.players.remove(k)
-		response = SimpleData("!DISCONNECT",[])
+		response = SimpleData("!DISCONNECT",[""])
 		send(conn, response.getAsDataStringInput())
 		connected = False
 	#-----
