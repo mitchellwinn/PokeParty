@@ -40,22 +40,25 @@ class Client(object):
         try:
             print("trying to connect client")
             self.client.connect(self.addr)
-            reply = self.client.recv(self.header).decode()
+            print("waiting on reply...")
+            try:
+                reply = self.client.recv(self.header).decode()
+                print("All good!")
+            except:
+                print("could not decipher reply. aborting.")
         except socket.error as e:
             self.connected = "FAILURE"
             print(self.connected+f"{e}")
             return
         print("connection successful")
         self.connected = "SUCCESS"
-        thread = Thread(target=serverHandler,args=(conn, addr))
+        thread = Thread(target=serverHandler,args=(self, conn, addr))
         thread.start()
-        #attempt to join or create room
-        send (self.getAsDataString("ROOM"))
-        send (self.getAsDataString("GETUPDATES"))
-        #get an initial understanding of all other players currently in room
  
 
-    def serverHandler():
+    def serverHandler(self, conn, addr):
+        send (self.getAsDataString("ROOM"))
+        send (self.getAsDataString("GETUPDATES"))
         while connected:
             data = self.client.recv(HEADER)
             try:
