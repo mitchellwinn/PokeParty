@@ -80,7 +80,10 @@ async def cyclePokemon():
 		if(game.gameState != "title"):
 			return
 		await(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],.9))
-		findByName("titlePokemon").transform.position=[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]
+		try:
+			findByName("titlePokemon").transform.position=[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]
+		except:
+			return
 		findByName("titlePokemon").getNamedComponent("sprite").fileChange(str(random.randint(1,251))+".gif")
 		#findByName("titlePokemon").getNamedComponent("sprite").gifInit()
 	findByName("title").destroy()

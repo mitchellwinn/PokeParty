@@ -2,7 +2,6 @@ import socket
 import pickle
 import asyncio
 import game
-from threading import Thread
 
 class SimpleData(object):
     def _init_(self, purpose, strings):
@@ -35,27 +34,6 @@ class Client(object):
         print(data)
         return dataString
 
-    def connect(self):
-
-        try:
-            print("trying to connect client")
-            self.client.connect(self.addr)
-            print("waiting on reply...")
-            try:
-                reply = self.client.recv(self.header).decode()
-                print("All good!")
-            except:
-                print("could not decipher reply. aborting.")
-        except socket.error as e:
-            self.connected = "FAILURE"
-            print(self.connected+f"{e}")
-            return
-        print("connection successful")
-        self.connected = "SUCCESS"
-        thread = Thread(target=serverHandler,args=(self, conn, addr))
-        thread.start()
- 
-
     def serverHandler(self, conn, addr):
         send (self.getAsDataString("ROOM"))
         send (self.getAsDataString("GETUPDATES"))
@@ -70,6 +48,25 @@ class Client(object):
             except:
                 continue
         conn.close()
+
+    def connect(self):
+        try:
+            print("trying to connect client")
+            self.client.connect(self.addr)
+            print("waiting on reply...")
+            try:
+                reply = self.client.recv(self.header)
+                print("All good!")
+            except:
+                print("could not decipher reply. aborting.")
+        except socket.error as e:
+            self.connected = "FAILURE"
+            print(self.connected+f"{e}")
+            return
+        print("connection successful")
+        self.connected = "SUCCESS"
+        serverHandler(conn, addr)
+        thread.start()
 
 
     def send(self, data):

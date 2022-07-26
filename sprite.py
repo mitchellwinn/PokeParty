@@ -12,7 +12,7 @@ class Sprite(object):
 			self.PILimg.seek(i)
 			rgba = self.PILimg.convert("RGBA")
 			toAppend = pg.image.fromstring(rgba.tobytes(),rgba.size,rgba.mode)
-			print(toAppend)
+			#print(toAppend)
 			self.frames.append(toAppend)
 		self.playing = False
 		self.img = self.frames[self.frame]
