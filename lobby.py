@@ -80,7 +80,7 @@ def connectRoom(room):
 		playSound("SFX_PRESS_AB.wav")
 		time.sleep(.75)
 		#game.gameState = "title"
-		#game.gameObjects.clear()
+		game.gameObjects.clear()
 		return
 	playSound("SFX_PRESS_AB.wav")
 	time.sleep(.75)

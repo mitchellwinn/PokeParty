@@ -102,15 +102,15 @@ def handleClient(conn, addr):
 	connected = True
 	while connected:
 		data = conn.recv(HEADER)
-		data = pickle.loads(data)
-		connected = clientMsgInterpret(conn, addr, data)
+		try:
+			data = pickle.loads(data)
+			connected = clientMsgInterpret(conn, addr, data)
+		except:
+			continue
 		try:
 			print(f"client:{addr} sent message with purpose:{data.purpose}")
 		except:
 			continue
 	conn.close()
-
-def lfi():
-	print("CRTL+C to halt program")
 
 startServer()
