@@ -11,10 +11,8 @@ def startServer():
 	HEADER = 4096
 	SERVER = ''
 	PORT = 1234
-	TIMEOUT=3
 	DISCONNECT_MESSAGE = "!DISCONNECT"
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.settimeout(TIMEOUT)
 	try:
 		s.bind((SERVER, PORT))
 		print(f"Successfully bound socket server to {SERVER}:{PORT}")
