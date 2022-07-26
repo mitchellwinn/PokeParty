@@ -2,7 +2,7 @@ import socket
 import pickle
 from room import Room
 from gameobject import GameObject
-from client import SimpleData,　Client
+from client import SimpleData, Client
 from threading import Thread
 
 def startServer():
