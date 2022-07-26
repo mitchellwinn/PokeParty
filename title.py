@@ -23,7 +23,7 @@ async def titleGo():
 	playSound("SFX_INTRO_CRASH.wav")
 	game.gameObjects.append(GameObject("titlePokemon",[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]))
 	game.gameObjects.append(GameObject("titleTrainer",[game.windowDimensions[0]*.165,game.windowDimensions[1]*.775]))
-	findByName("titleTrainer").addComponent(Sprite(str(random.randint(1,15))+".png","trainers\\"),"sprite")
+	findByName("titleTrainer").addComponent(Sprite(str(random.randint(1,34))+".png","trainers\\"),"sprite")
 	asyncio.create_task(cyclePokemon())
 	game.gameObjects.append(GameObject("title",[game.windowDimensions[0]/2,0]))
 	findByName("title").addComponent(Sprite("title1black.png","title\\"),"sprite")
@@ -71,7 +71,9 @@ async def titleMenu():
 async def cyclePokemon():
 	findByName("titlePokemon").addComponent(Sprite(str(random.randint(1,251))+".gif","pokemon\\","gif"),"sprite")
 	while game.gameState == "title":
-		await(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*.45,game.windowDimensions[1]*.775],.45))
+		
+		asyncio.create_task(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*.45,game.windowDimensions[1]*.775],.45))
+		await(findByName("titleTrainer").transform.smoothMoveOverTime([game.windowDimensions[0]*.165,game.windowDimensions[1]*.775],.45))
 		await asyncio.sleep(.3)
 		if(game.gameState != "title"):
 			return
@@ -79,11 +81,14 @@ async def cyclePokemon():
 		await asyncio.sleep(2)
 		if(game.gameState != "title"):
 			return
-		await(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],.9))
+		
+		asyncio.create_task(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],.9))
+		await(findByName("titleTrainer").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],1.1))
 		try:
 			findByName("titlePokemon").transform.position=[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]
 		except:
 			return
+		findByName("titleTrainer").getNamedComponent("sprite").fileChange(str(random.randint(1,34))+".png")
 		findByName("titlePokemon").getNamedComponent("sprite").fileChange(str(random.randint(1,251))+".gif")
 		#findByName("titlePokemon").getNamedComponent("sprite").gifInit()
 	findByName("title").destroy()
