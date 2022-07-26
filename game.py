@@ -2,10 +2,13 @@ import pygame as pg
 import asyncio
 import ctypes
 import random
+from sprite import Sprite
+from gameobject import findByName, GameObject
 
 #all global variables to be used by game
 def __init__():
-	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject , otherPlayers, allPlayers
+	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject , otherPlayers, allPlayers, gameVolume, iconShow
+	iconShow = 0
 	myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
 	ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 	timestep = 1/60
@@ -16,17 +19,25 @@ def __init__():
 	windowDimensions = [160,144]
 	programLive = True
 	volume = .1
+	gameVolume = 4
 	frame = 0
 	full = False
 	border = pg.image.load("sprites\\frame.png")
 	border = pg.transform.scale(border, (border.get_rect().width*4, border.get_rect().height*4))
 #update playrInput global variable to be used throughout program
 def playerInputsGet():
-	inputsFalse = [False,False,False,False,False,False,False,False,False,False]
-	inputs = inputsFalse
+	global typeInput, typing, inputsFalse, inputs, gameState
+	typing = False
+	if gameState=="lobby":
+		typing = True
+	inputsFalse = [False,False,False,False,False,False,False,False,False,False,False,False,False,False]
+	if typing == False:
+		typeInput = ""
+		inputs = inputsFalse
 	events = pg.event.get()
 	for event in events:
 		if event.type == pg.KEYDOWN:
+			typeInput = event.unicode
 			if event.key == pg.K_ESCAPE:
 				print("Pressed ESC")
 				inputs[0] = True
@@ -48,6 +59,14 @@ def playerInputsGet():
 				inputs[8] = True
 			elif event.key == pg.K_BACKQUOTE:
 				inputs[9] = True
+			elif event.key == pg.K_PAGEUP:
+				inputs[10] = True
+			elif event.key == pg.K_PAGEDOWN:
+				inputs[11] = True
+			elif event.key == pg.K_RETURN:
+				inputs[12] = True
+			elif event.key == pg.K_BACKSPACE:
+				inputs[13] = True
 	return inputs
 
 #main operations of pygame
@@ -70,6 +89,10 @@ async def gameMain():
 			zoom(1)
 		elif playerInputs[6]==True:
 			zoom(-1)
+		if playerInputs[10]==True:
+			asyncio.create_task(volumeMod(1))
+		elif playerInputs[11]==True:
+			asyncio.create_task(volumeMod(-1))
 		if playerInputs[8]==True:
 			fullscreen()
 
@@ -81,6 +104,34 @@ async def gameMain():
 	if playerObject.getNamedComponent("client")!=-1:
 		playerObject.getNamedComponent("client").send("!DISCONNECT")
 	quit()
+
+async def volumeMod(amount):
+	global volume, gameVolume, iconShow
+	iconShow+=1
+	print(f"add 1 to iconShow to give: {iconShow}")
+	gameVolume += amount
+	if gameVolume<0:
+		gameVolume = 0
+	elif gameVolume>4:
+		gameVolume = 4
+	thisVolume = gameVolume
+	try:
+		findByName(f"volumeIcon").destroy()
+	except:
+		None
+	instantiate(f"volumeIcon",[0,0])
+	findByName(f"volumeIcon").addComponent(Sprite(f"volumeIcon{thisVolume}.png","","png","topleft"),f"sprite")
+	pg.mixer.music.set_volume(volume*.7*thisVolume)
+	await asyncio.sleep(1)
+	print("just slept for 1 second")
+	iconShow-=1
+	print(f"subtract 1 from iconShow to give: {iconShow}")
+	if(iconShow>0):
+		return
+	try:
+		findByName(f"volumeIcon").destroy()
+	except:
+		None
 
 def zoom(amount):
 	global scale, screen, full, frame
@@ -135,10 +186,16 @@ def drawSprites(sprite,gobj):
 		if sprite.fileType == "gif":
 			sprite.gifCheck()
 	img = pg.transform.scale(sprite.img, (sprite.img.get_rect().width*scale, sprite.img.get_rect().height*scale))
-	if full == False:
-		screen.blit(img,img.get_rect(center=(round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale)))
-	elif full == True:
-		screen.blit(img,img.get_rect(center=(round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2)))
+	if(sprite.anchor=="center"):	
+		if full == False:
+			screen.blit(img,img.get_rect(center=(round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale)))
+		elif full == True:
+			screen.blit(img,img.get_rect(center=(round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2)))
+	elif(sprite.anchor=="topleft"):	
+		if full == False:
+			screen.blit(img,img.get_rect(topleft=(round(gobj.transform.position[0])*scale,round(gobj.transform.position[1])*scale)))
+		elif full == True:
+			screen.blit(img,img.get_rect(topleft=(round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2)))
 
 def drawText(text,gobj):
 	global screen, w, h, full, scale, frame

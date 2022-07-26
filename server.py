@@ -1,18 +1,11 @@
 import socket
 import pickle
-import asyncio
 from room import Room
 from gameobject import GameObject
 from client import SimpleData
-import pygame as pg
+from threading import Thread
 
-async def startServer():
-	try:
-		pg.init()
-		print("Pygame initizlized")
-	except:
-		print("Failed to initialize Pygame")
-		quit()
+def startServer():
 	global rooms, DISCONNECT_MESSAGE, s, HEADER
 	rooms = []
 	HEADER = 4096
@@ -22,26 +15,24 @@ async def startServer():
 	DISCONNECT_MESSAGE = "!DISCONNECT"
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.settimeout(TIMEOUT)
-	s.setblocking(False)
 	try:
 		s.bind((SERVER, PORT))
 		print(f"Successfully bound socket server to {SERVER}:{PORT}")
 	except socket.error as e:
 		print(f"[SOCKET ERROR]: {e}")
 	s.listen()
-	asyncio.create_task(lfi())
-	await asyncio.sleep(0)
+	print("CRTL+C to halt program")
 	print("Awaiting connection from next client...")
 	while True:		
 		try:
 			conn, addr = s.accept()
 		except:
 			continue
-		asyncio.create_task(handleClient(conn, addr))
+		thread = Thread(target=handleClient,args=(conn, addr))
+		thread.start()
 		clients = 0
 		count = 0
 		print("Awaiting connection from next client...")
-		await asyncio.sleep(0)
 
 #send a message to the associated client via their asynchronous handling process
 def send(conn,data):
@@ -105,28 +96,21 @@ def clientMsgInterpret(conn, addr, msg):
 				send(conn ,dataString)
 	return connected
 
-async def handleClient(conn, addr):
+def handleClient(conn, addr):
 	global HEADER
 	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
-	conn.settimeout(3)
-	conn.setblocking(False)
 	while connected:
-		try:
-			data = conn.recv(HEADER)
-		except:
-			await asyncio.sleep(0)
-			continue
+		data = conn.recv(HEADER)
 		data = pickle.loads(data)
 		connected = clientMsgInterpret(conn, addr, data)
 		try:
 			print(f"client:{addr} sent message with purpose:{data.purpose}")
 		except:
-			asyncio.sleep(0)
-		await asyncio.sleep(0)
+			continue
 	conn.close()
 
-async def lfi():
+def lfi():
 	print("CRTL+C to halt program")
 
-asyncio.run(startServer())
+startServer()

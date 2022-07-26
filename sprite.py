@@ -5,8 +5,6 @@ from PIL import Image, ImageSequence
 class Sprite(object):
 
 	def gifInit(self):
-		self.waitFrames = 0
-		self.framesWaited = 0
 		self.frame = 0
 		self.PILimg = Image.open(self.filePath+self.file)
 		self.frames = []
@@ -31,16 +29,14 @@ class Sprite(object):
 	def gifCheck(self):
 		if self.playing==False:
 			return
-		self.framesWaited+=1
-		if self.framesWaited>self.waitFrames:
-			self.framesWaited=0
-			self.frame+=1
-			if self.frame>=len(self.frames):
-				playing = False
-				self.frame = len(self.frames)-1
+		self.frame+=1
+		if self.frame>=len(self.frames):
+			self.playing = False
+			self.frame = len(self.frames)-1
 		self.img = self.frames[self.frame]
 
 	def __init__(self,*args):
+		self.anchor = "center"
 		self.filePath = "sprites\\"+args[1]
 		#self.img = pg.image.load(self.filePath+self.file)
 		if len(args)>2:
@@ -48,4 +44,6 @@ class Sprite(object):
 		else:
 			self.fileType = "png"
 		self.fileChange(args[0])
+		if(len(args)>3):
+			self.anchor=args[3]
 

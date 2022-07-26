@@ -5,7 +5,8 @@ from gameobject import GameObject, findByName
 from sprite import Sprite
 from text import Text
 from audio import playSound, playMusic, stopMusic
-from lobby import join
+from lobby import lobbyStart
+from threading import Thread
 
 async def titleGo():
 	#print("Triggered titleGo from game.py")
@@ -53,7 +54,11 @@ async def titleMenu():
 			game.gameObjects.clear()
 			if choice==0:
 				game.gameState = "lobby"
-				asyncio.create_task(join())
+				thread = Thread(target=lobbyStart)
+				thread.start()
+				while thread.is_alive():
+					await asyncio.sleep(0)
+				game.gameState = "title"
 			if choice==1:
 				await asyncio.sleep(.25)
 				game.programLive = False

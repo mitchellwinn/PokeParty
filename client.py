@@ -2,6 +2,7 @@ import socket
 import pickle
 import asyncio
 import game
+from threading import Thread
 
 class SimpleData(object):
     def _init_(self, purpose, strings):
@@ -20,7 +21,6 @@ class Client(object):
         self.header = 4096
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.settimeout(3)
-        self.client.setblocking(False)
         self.host = '173.255.244.44'
         self.port = 1234
         self.addr = (self.host, self.port)
@@ -39,30 +39,29 @@ class Client(object):
         try:
             print("trying to connect client")
             self.client.connect(self.addr)
+            reply = self.client.recv(2048).decode()
         except socket.error as e:
-            self.connected = "[FAILURE]{e}"
-            print(self.connected)
+            self.connected = "FAILURE"
+            print(self.connected+f"{e}")
             return
         print("connection successful")
         self.connected = "SUCCESS"
-        reply = self.client.recv(2048).decode()
-        asyncio.run(serverHandler())
+        thread = Thread(target=serverHandler,args=(conn, addr))
+        thread.start()
         #attempt to join or create room
         send (self.getAsDataString("ROOM"))
         send (self.getAsDataString("GETUPDATES"))
         #get an initial understanding of all other players currently in room
  
 
-    async def serverHandler():
+    def serverHandler():
         while connected:
             data = self.client.recv(HEADER)
             data = pickle.loads(data)
             try:
                 connected = serverMsgInterpret(data)
             except:
-                await asyncio.sleep(0)
                 continue
-            await asyncio.sleep(0)
         conn.close()
 
 

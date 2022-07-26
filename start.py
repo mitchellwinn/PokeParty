@@ -2,7 +2,7 @@
 #RUN THIS SCRIPT TO PLAY!!!
 #------------------------------
 import game
-from gameobject import GameObject
+from gameobject import GameObject, findByName
 import asyncio
 from title import titleGo, titleMenu
 
@@ -17,7 +17,7 @@ async def taskMain():
 	print("Awaiting termination: press ESC")
 	await titleMenu()
 	while(game.programLive):
-		if(game.gameState=="title"):
+		if game.gameState=="title":
 			await titleGo()
 			await titleMenu()
 		await asyncio.sleep(0)
