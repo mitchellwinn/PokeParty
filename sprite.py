@@ -8,11 +8,11 @@ class Sprite(object):
 		self.frame = 0
 		self.PILimg = Image.open(self.filePath+self.file)
 		self.frames = []
-		for i in ImageSequence.Iterator(self.PILimg):
-			mode = i.mode
-			size = i.size
-			data = i.tobytes()
-			toAppend = pg.image.fromstring(data,size,mode)
+		for i in range(self.PILimg.n_frames):
+			self.PILimg.seek(i)
+			rgba = self.PILimg.convert("RGBA")
+			toAppend = pg.image.fromstring(rgba.tobytes(),rgba.size,rgba.mode)
+			print(toAppend)
 			self.frames.append(toAppend)
 		self.playing = False
 		self.img = self.frames[self.frame]
