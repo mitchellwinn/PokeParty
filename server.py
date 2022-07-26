@@ -24,10 +24,7 @@ def startServer():
 	print("CRTL+C to halt program")
 	print("Awaiting connection from next client...")
 	while True:		
-		try:
-			conn, addr = s.accept()
-		except:
-			continue
+		conn, addr = s.accept()
 		thread = Thread(target=handleClient,args=(conn, addr))
 		thread.start()
 		clients = 0

@@ -57,7 +57,10 @@ class Client(object):
     def serverHandler():
         while connected:
             data = self.client.recv(HEADER)
-            data = pickle.loads(data)
+            try:
+                data = pickle.loads(data)
+            except:
+                continue
             try:
                 connected = serverMsgInterpret(data)
             except:
