@@ -101,10 +101,12 @@ def handleClient(conn, addr):
 			data = pickle.loads(data)
 			connected = clientMsgInterpret(conn, addr, data)
 		except:
+			print(f"client:{addr} sent data that could not be unpacked by pickled.loads(data)")
 			continue
 		try:
 			print(f"client:{addr} sent message with purpose:{data.purpose}")
 		except:
+			print(f"client:{addr} sent message that can't be read")
 			continue
 	conn.close()
 
