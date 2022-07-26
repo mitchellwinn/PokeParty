@@ -2,8 +2,8 @@ import socket
 import pickle
 from room import Room
 from gameobject import GameObject
-from client import SimpleData
-from threading import Thread
+from client import SimpleData,Client
+from threading import Thread,
 
 def startServer():
 	global rooms, DISCONNECT_MESSAGE, s, HEADER
@@ -61,18 +61,22 @@ def clientMsgInterpret(conn, addr, msg):
 	elif msg.purpose=="ROOM":
 		roomAlreadyExists = False
 		for i in rooms:
-			if i.name == msg.desiredRoom:
+			if i.name == msg.strings[0]:
 				thisRoom = i
 				roomAlreadyExists = True
 		if roomAlreadyExists == False:
-			thisRoom = Room(msg.desiredRoom)
-			msg.room = msg.desiredRoom
-			thisRoom.players.append(msg.associatedObject)
+			thisRoom = Room(msg.strings[0])
+			thisClient = Client(msg.strings[0])
+			thisClient.ADDRESS = msg.strings[1]
+			thisRoom.players.append(thisClient)
 			rooms.append(thisRoom)
+			print(s"Adding client:{msg.strings[1]} to NEW room {msg.strings[0]}!")
 		else:
-			msg.room = msg.desiredRoom
-			thisRoom.players.append(msg)
-		response = SimpleData("SETROOM",["msg.desiredRoom"])
+			thisClient = Client(msg.strings[0])
+			thisClient.ADDRESS = msg.strings[1]
+			thisRoom.players.append(thisClient)
+			print(s"Adding client:{msg.strings[1]} to EXISTING room {msg.strings[0]}!")
+		response = SimpleData("SETROOM",[msg.strings[0]])
 		send(conn ,response.getAsDataStringInput())
 	#-----
 	#-----updates server's knowledge of a specific player in a room

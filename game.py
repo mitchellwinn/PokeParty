@@ -216,13 +216,16 @@ def drawText(text,gobj):
 	if full == False:
 		screen.blit(text.img,text.rect)
 	elif full == True:
-		if(text.anchor == "center"):
-			text.rect.center = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
-		elif(text.anchor == "left"):
-			text.rect.midleft = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
-		elif(text.anchor == "right"):
-			text.rect.midright = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
-		screen.blit(text.img,text.rect)
+		try:
+			if(text.anchor == "center"):
+				text.rect.center = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
+			elif(text.anchor == "left"):
+				text.rect.midleft = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
+			elif(text.anchor == "right"):
+				text.rect.midright = [round(gobj.transform.position[0]-windowDimensions[0]/2)*scale+w/2,round(gobj.transform.position[1]-windowDimensions[1]/2)*scale+h/2]
+			screen.blit(text.img,text.rect)
+		except:
+			print("")
 
 #---USEFUL MODULE FUNCTIONS FOR ALL GAMES---------------------------------------------------------------------
 

@@ -3,6 +3,8 @@ import pickle
 import asyncio
 import game
 
+
+
 class SimpleData(object):
     def _init_(self, purpose, strings):
         self.purpose = purpose
@@ -14,6 +16,48 @@ class SimpleData(object):
 
 
 class Client(object):
+
+    def serverMsgInterpret(self, msg):
+        connected = True
+        if msg.stirngs[0] == self.DISCONNECT_MESSAGE:
+            connected = False
+        elif msg.purpose == "SETROOM":
+            self.room = msg.strings[0]
+            print("updated room!")
+        elif msg[0].purpose == "GETUPDATES":
+            #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
+            for i in game.otherPlayers:
+                i.removeFromClient = True
+                for thisMsg in msg:
+                    if thisMsg.id == self.id:
+                        return
+                    referenceExists = False
+                    if i.id == thisMsg.id:
+                        referenceExists = True
+                        i.removeFromClient = False
+                        i = thisMsg
+                    elif referenceExists == False:
+                        game.otherPlayers.append(msg)
+                if(i.removeFromClient):
+                    game.otherPlayers.remove(i)
+            game.allPlayersInRoom = game.otherPlayers
+            game.allPlayersInRoom.append(game.playerObject)
+
+        return connected
+
+    def send(self, data):
+        try:
+            #send desired communication to server
+            self.client.send(data)
+            #get desired communication from server
+            reply = self.client.recv(self.header)
+            reply = pickle.loads(reply)
+            #interpret the reply and do something client sided in response
+            serverMsgInterpret(reply)
+            return reply
+        except socket.error as e:
+            print(f"[SOCKET ERROR]: {e}")
+            return -1
 
     def __init__(self, room):
         self.connected = "UNDECIDED"
@@ -40,49 +84,8 @@ class Client(object):
         except:
             print("connection unsuccessful")
             self.connected = "FAILURE"
-        print("connection unsuccessful")
+            return
+        print("connection successful")
         self.connected = "SUCCESS"
-        send (self.getAsDataString("ROOM"))
-        send (self.getAsDataString("GETUPDATES"))
-
-
-    def send(self, data):
-        try:
-            #send desired communication to server
-            self.client.send(data)
-            #get desired communication from server
-            reply = self.client.recv(self.header)
-            reply = pickle.loads(reply)
-            #interpret the reply and do something client sided in response
-            serverMsgInterpret(reply)
-            return reply
-        except socket.error as e:
-            print(f"[SOCKET ERROR]: {e}")
-            return -1
-
-    def serverMsgInterpret(self, msg):
-        connected = True
-        if msg.stirngs[0] == self.DISCONNECT_MESSAGE:
-            connected = False
-        elif msg.purpose == "SETROOM":
-            self.room = msg.strings[0]
-        elif msg[0].purpose == "GETUPDATES":
-            #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
-            for i in game.otherPlayers:
-                i.removeFromClient = True
-                for thisMsg in msg:
-                    if thisMsg.id == self.id:
-                        return
-                    referenceExists = False
-                    if i.id == thisMsg.id:
-                        referenceExists = True
-                        i.removeFromClient = False
-                        i = thisMsg
-                    elif referenceExists == False:
-                        game.otherPlayers.append(msg)
-                if(i.removeFromClient):
-                    game.otherPlayers.remove(i)
-            game.allPlayersInRoom = game.otherPlayers
-            game.allPlayersInRoom.append(game.playerObject)
-
-        return connected
+        self.send (self.getAsDataString(SimpleData("ROOM",[self.desiredRoom,self.id[1]])))
+        #self.send (self.getAsDataString("GETUPDATES"))
