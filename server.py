@@ -71,6 +71,7 @@ def clientMsgInterpret(conn, addr, msg):
 				print(f"The requested room {msg.strings[0]} does not yet exist...")
 			except:
 				print("error with msg.strings")
+			try:
 			thisRoom = Room(msg.strings[0])
 			thisClient = Client(msg.strings[0])
 			thisClient.ADDRESS = msg.strings[1]
