@@ -9,7 +9,7 @@ from threading import Thread
 class SimpleData(object):
     def __init__(self, purpose, strings):
         self.purpose = purpose
-        self.strings = []
+        self.strings = strings
 
     def getAsDataString(self):
         dataString = pickle.dumps(self)
