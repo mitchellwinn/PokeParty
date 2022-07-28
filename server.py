@@ -72,8 +72,13 @@ def clientMsgInterpret(conn, addr, msg):
 			except:
 				print("error with msg.strings")
 			try:
-			thisRoom = Room(msg.strings[0])
-			thisClient = Client(msg.strings[0])
+				thisRoom = Room(msg.strings[0])
+				thisClient = Client(msg.strings[0])
+			except:
+				print("could not make Room/Client server instance!")
+				response = SimpleData("!DISCONNECT",[msg.strings[0]])
+			send(conn ,response.getAsDataStringInput())
+				return
 			thisClient.ADDRESS = msg.strings[1]
 			thisRoom.players.append(thisClient)
 			rooms.append(thisRoom)
