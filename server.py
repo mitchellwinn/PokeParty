@@ -54,7 +54,7 @@ def clientMsgInterpret(conn, addr, msg):
 				if k.ADDRESS == msg.ADDRESS:
 					i.players.remove(k)
 		response = SimpleData("!DISCONNECT",[""])
-		send(conn, response.getAsDataStringInput())
+		send(conn, response.getAsDataString())
 		connected = False
 	#-----
 	#-----check room status before player is allowed to join
@@ -78,7 +78,7 @@ def clientMsgInterpret(conn, addr, msg):
 				print("could not make Room/Client server instance!")
 				response = SimpleData("!DISCONNECT",[msg.strings[0]])
 				return
-			send(conn ,response.getAsDataStringInput())
+			send(conn ,response.getAsDataString())
 			thisClient.ADDRESS = msg.strings[1]
 			thisRoom.players.append(thisClient)
 			rooms.append(thisRoom)
@@ -89,7 +89,7 @@ def clientMsgInterpret(conn, addr, msg):
 			thisRoom.players.append(thisClient)
 			print(f"Adding client:{msg.strings[1]} to EXISTING room {msg.strings[0]}!")
 		response = SimpleData("SETROOM",[msg.strings[0]])
-		send(conn ,response.getAsDataStringInput())
+		send(conn ,response.getAsDataString())
 	#-----
 	#-----updates server's knowledge of a specific player in a room
 	elif msg.purpose=="UPDATE":
@@ -112,7 +112,7 @@ def handleClient(conn, addr):
 	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
 	response = SimpleData("SETID",[addr])
-	send(conn ,response.getAsDataStringInput())
+	send(conn ,response.getAsDataString())
 	while connected:
 		print(f"client:{addr} receiving data...")
 		data = conn.recv(HEADER)
