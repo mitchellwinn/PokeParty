@@ -15,7 +15,7 @@ class SimpleData(object):
         dataString = pickle.dumps(self)
         return dataString
 
-    def ToString(self):
+    def toString(self):
         return f"SimpleData:{self.purpose}:{self.strings}"
 
 
@@ -94,6 +94,6 @@ class Client(object):
             return
         print("connection successful")
         self.connected = "SUCCESS"
-        toSend = SimpleData("ROOM",[self.desiredRoom,self.id]).getAsDataString()
-        print(tosend.toString())
-        self.send (toSend)
+        toSend = SimpleData("ROOM",[self.desiredRoom,self.id])
+        print(toSend.toString())
+        self.send (toSend.getAsDataString())
