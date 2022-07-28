@@ -24,8 +24,7 @@ class SimpleData(object):
 
 class Client(object):
 
-    def serverMsgInterpret(self):
-        msg = reply
+    def serverMsgInterpret(self, msg):
         if msg.purpose == self.DISCONNECT_MESSAGE:
             game.gameObjects.clear()
             game.gameState = "title"
