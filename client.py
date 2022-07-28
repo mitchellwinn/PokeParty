@@ -71,7 +71,7 @@ class Client(object):
 
     def __init__(self, room):
         self.connected = "UNDECIDED"
-        self.header = 4096
+        self.header = 4096*2
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = '173.255.244.44'
         self.port = 1234
