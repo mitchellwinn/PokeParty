@@ -61,10 +61,9 @@ class Client(object):
             reply = self.client.recv(self.header)
             print(f"Got response from server!")
             reply = pickle.loads(reply)
-            print(f"Purpose: {msg.purpose}")
+            print(f"Purpose: {reply.purpose}")
             #interpret the reply and do something client sided in response
             serverMsgInterpret(reply)
-            return reply
         except socket.error as e:
             print(f"[SOCKET ERROR]: {e}")
             return -1
