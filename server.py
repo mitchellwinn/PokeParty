@@ -8,7 +8,7 @@ from threading import Thread
 def startServer():
 	global rooms, DISCONNECT_MESSAGE, s, HEADER
 	rooms = []
-	HEADER = 4096*2
+	HEADER = 4096
 	SERVER = ''
 	PORT = 1234
 	DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -77,8 +77,8 @@ def clientMsgInterpret(conn, addr, msg):
 			except:
 				print("could not make Room/Client server instance!")
 				response = SimpleData("!DISCONNECT",[msg.strings[0]])
+				send(conn ,response.getAsDataString())
 				return
-			send(conn ,response.getAsDataString())
 			thisClient.ADDRESS = msg.strings[1]
 			thisRoom.players.append(thisClient)
 			rooms.append(thisRoom)
