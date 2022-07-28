@@ -75,7 +75,6 @@ class Client(object):
         self.addr = (self.host, self.port)
         self.ADDRESS = ""
         self.desiredRoom = room
-        self.connect()
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
 
     def getAsDataString(self, purpose):

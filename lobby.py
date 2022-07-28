@@ -65,6 +65,7 @@ def connectRoom(room):
 	else:
 		game.playerObject.removeComponent("client")
 		game.playerObject.addComponent(Client(room),"client")
+	game.playerObject.getNamedComponent("client").connect()
 	if game.playerObject.getNamedComponent("client").connected=="FAILURE":
 		game.playerObject.removeComponent("client")
 		findByName("titleText").getNamedComponent("text").text = "Failed to reach Server!"
