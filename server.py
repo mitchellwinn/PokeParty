@@ -111,6 +111,8 @@ def handleClient(conn, addr):
 	global HEADER
 	print(f"[NEW CONNECTION] client:{addr} connected!") 
 	connected = True
+	response = SimpleData("SETID",[addr])
+	send(conn ,response.getAsDataStringInput())
 	while connected:
 		print(f"client:{addr} receiving data...")
 		data = conn.recv(HEADER)
