@@ -60,7 +60,7 @@ class Client(object):
                         thisPlayer.getNamedComponent("client").trainer = i.strings[2]
                         thisPlayer.addComponent(Sprite(str(thisPlayer.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
                         game.allPlayers.append(thisPlayer)
-                    count++
+                    count+=1
 
 
 
