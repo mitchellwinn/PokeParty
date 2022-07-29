@@ -43,20 +43,25 @@ class Client(object):
 
         elif msg.purpose == "GETUPDATES":
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
-            game.allPlayers.clear()
             if game.gameState=="inRoom":
                 count=2
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
                     playerAlreadyExists = False
+                    shouldExist = False
                     for p in game.allPlayers:
                         if(i.strings[0]==p.getNamedComponent("client").id):
                             p.getNamedComponent("sprite").fileChange(str(p.getNamedComponent("client").trainer)+".png")
                             p.transform.position = [game.windowDimensions[0]*.165+1675*count,game.windowDimensions[1]*0.85]
                             playerAlreadyExists = True
+                        for i2 in msg.strings:
+                            if p.getNamedComponent("client").id == i2.strings[0]
+                            shouldExist = True
+                        if(shouldExist==False):
+                            game.allPlayers.remove(p)
                     if playerAlreadyExists==False:
-                        thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+count*.1675,game.windowDimensions[1]*0.775])
+                        thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.1675,game.windowDimensions[1]*0.775])
                         thisPlayer.addComponent(Client(self.room),"client")
                         thisPlayer.getNamedComponent("client").id = i.strings[0]
                         thisPlayer.getNamedComponent("client").name = i.strings[1]
@@ -99,7 +104,7 @@ class Client(object):
         self.ADDRESS = ""
         self.desiredRoom = room
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
-        self.trainer = random.randint(1,34)
+        #self.trainer = random.randint(1,34)
 
     def getAsDataString(self, purpose):
         self.purpose = purpose
