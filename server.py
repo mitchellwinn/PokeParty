@@ -111,6 +111,7 @@ def clientMsgInterpret(conn, addr, msg):
 					response = SimpleData("!DISCONNECT",[""])
 					try:
 						send(conn ,response.getAsDataString())
+					except:
 						print(f"failed to send a disconnect message... error:{e}")
 	#-----
 	#-----
