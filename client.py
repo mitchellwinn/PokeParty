@@ -4,6 +4,7 @@ import asyncio
 import game
 import os
 from threading import Thread
+from gameobject import GameObject
 
 
 
@@ -30,16 +31,38 @@ class Client(object):
             game.gameObjects.clear()
             game.gameState = "title"
             del(self)
+
+
         elif msg.purpose == "SETROOM":
             self.room = msg.strings[0]
             print("updated room!")
+
+
         elif msg.purpose == "GETUPDATES":
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
             game.allPlayers.clear()
-            for i in msg.strings:
-                if i.strings[0] == self.id:
-                    continue
-                game.allPlayers.append(i)
+            if game.gameState=="inRoom":
+                count=2
+                for i in msg.strings:
+                    if i.strings[0] == self.id:
+                        continue
+                        playerAlreadyExists = False
+                    for p in game.allPlayers:
+                        if(i.strings[0]==p.getNamedComponent("client").id):
+                            p.getNamedComponent("sprite").fileChange(str(p.getNamedComponent("client").trainer)+".png")
+                            p.transform.position = [game.windowDimensions[0]*.175*count,game.windowDimensions[1]*0.85]
+                            playerAlreadyExists = True
+                    if(!playerAlreadyExists)
+                        thisPlayer = GameObject(i.strings[0],[game.windowDimensions[0]*.175*count,game.windowDimensions[1]*0.85])
+                        thisPlayer.addComponent(Client(self.room),"client")
+                        thisPlayer.getNamedComponent("client").id = i.strings[0]
+                        thisPlayer.getNamedComponent("client").name = i.strings[1]
+                        thisPlayer.getNamedComponent("client").trainer = i.strings[2]
+                        thisPlayer.addComponent(Sprite(str(thisPlayer.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
+                        game.allPlayers.append(thisPlayer)
+                    count++
+
+
 
     def send(self, data, wait):
         try:
@@ -70,6 +93,7 @@ class Client(object):
         self.ADDRESS = ""
         self.desiredRoom = room
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
+        self.trainer = random.randint(1,34)
 
     def getAsDataString(self, purpose):
         self.purpose = purpose
@@ -91,7 +115,14 @@ class Client(object):
         print(f"Got response from server!")
         reply = pickle.loads(reply)
         self.id = reply.strings[0]
-        toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name])
+        toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name,self.trainer])
         self.send (toSend.getAsDataString(),True)
         toSend = SimpleData("GETUPDATES",[self.room])
         self.send (toSend.getAsDataString(),True)
+        asyncio.create_task(getUpdates())
+
+    async def getUpdates():
+        await asyncio.sleep(.75)
+        toSend = SimpleData("GETUPDATES",[self.room])
+        self.send (toSend.getAsDataString(),True)
+

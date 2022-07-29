@@ -117,14 +117,19 @@ def inRoom():
 	findByName("titleText2").addComponent(Text("Press 'R' to READY","pokemon1.ttf"),"text")
 	game.gameObjects.append(GameObject("titleText3",[game.windowDimensions[0]/2,game.windowDimensions[1]*.65]))
 	findByName("titleText3").addComponent(Text("Not all players are READY","pokemon1.ttf"),"text")
+	game.playerObject.transform.position = [game.windowDimensions[0]*.175,game.windowDimensions[1]*0.85]
+	game.playerObject.addComponent(Sprite(str(game.playerObject.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
 	i=0
 	while inputDone==False:
 		if game.playerInputs[9]==True:
 			stopMusic()
 			game.playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[game.playerObject.getNamedComponent("client").id]).getAsDataString(),False)
+			game.playerObject.removeComponent("client")
+			game.playerObject.removeComponent("sprite")
 			playSound("SFX_PRESS_AB.wav")
 			game.gameState = "title"
 			game.gameObjects.clear()
+			game.allPlayers.clear()
 			inputDone = True
 			return
 		if ready==False:
