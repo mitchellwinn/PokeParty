@@ -8,6 +8,7 @@ from text import Text
 from audio import playSound, playMusic, stopMusic
 import pygame as pg
 from client import Client, SimpleData
+from sprite import Sprite
 
 def lobbyStart():
 	join()
@@ -120,7 +121,11 @@ async def inRoom():
 	findByName("titleText3").addComponent(Text("Not all players are READY","pokemon1.ttf"),"text")
 	game.playerObject.transform.position = [game.windowDimensions[0]*.175,game.windowDimensions[1]*0.85]
 	game.playerObject.addComponent(Sprite(str(game.playerObject.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
-	asyncio.create_task(game.playerObject.getNamedComponent("client").getUpdates())
+	try:
+		asyncio.create_task(game.playerObject.getNamedComponent("client").getUpdates())
+		print("created asyncio task getUpdates()")
+	except:
+		print("failed to create asyncio task getUpdates()")
 	i=0
 	while inputDone==False:
 		if game.playerInputs[9]==True:

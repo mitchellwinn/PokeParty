@@ -74,7 +74,10 @@ class Client(object):
                 return
             print(f"Sent data to server!\nWaiting on response...!")
             #get desired communication from server
-            reply = self.client.recv(self.header)
+            try:
+                reply = self.client.recv(self.header)
+            except:
+                print(f"[SOCKET ERROR]: {e}")
             print(f"Got response from server!")
             reply = pickle.loads(reply)
             print(f"Purpose: {reply.purpose}")
@@ -105,10 +108,15 @@ class Client(object):
         return dataString
 
     async def getUpdates(self):
+        print("hi")
         while True:
             await asyncio.sleep(.75)
             toSend = SimpleData("GETUPDATES",[self.room])
-            self.send (toSend.getAsDataString(),True)
+            try:
+                self.send (toSend.getAsDataString(),True)
+            except socket.error as e:
+                print(f"[SOCKET ERROR]: {e}")
+
 
     def connect(self):
         try:
