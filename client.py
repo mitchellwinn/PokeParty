@@ -36,7 +36,7 @@ class Client(object):
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
             game.allPlayers.clear()
             for i in msg.strings:
-                if i[0] == self.id:
+                if i.strings[0] == self.id:
                     i = self
                 game.allPlayers.append(i)
 
