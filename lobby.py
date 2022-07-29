@@ -9,16 +9,16 @@ import pygame as pg
 from client import Client
 
 def lobbyStart():
-	game.frame = 0
 	join()
-
+	game.gameObjects.clear()
 
 def join():
+	time.sleep(.25)
+	game.frame = 0
 	global roomName
 	roomName = ""
 	inputDone = False
 	stopMusic()
-	time.sleep(.25)
 	playMusic("NBtown.mp3")
 	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]/2.2]))
 	findByName("titleText").addComponent(Text("Enter Room Name!","pokemon1.ttf"),"text")
@@ -51,9 +51,9 @@ def join():
 			user_text += game.typeInput
 		findByName("titleText2").getNamedComponent("text").text = user_text+blinker
 		if game.frame%60>=30:
-			blinker = "l"
+			blinker = ""
 		elif game.frame%60>=0:
-			blinker = " "
+			blinker = "l"
 		game.inputs = game.inputsFalse
 		game.typeInput = ""
 		time.sleep(game.timestep)

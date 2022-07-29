@@ -34,13 +34,11 @@ class Client(object):
             print("updated room!")
         elif msg.purpose == "GETUPDATES":
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
-            game.allPlayers = msg.strings
-            for i in game.allPlayers:
+            game.allPlayers.clear()
+            for i in msg.strings:
                 if i.id == self.id:
                     i = self
-                    break
-
-
+                game.allPlayers.append(i)
 
     def send(self, data, wait):
         try:
