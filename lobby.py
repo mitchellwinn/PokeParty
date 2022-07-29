@@ -85,9 +85,9 @@ def connectRoom(room):
 	findByName("titleText2").addComponent(Text("","pokemon1.ttf"),"text")
 	game.gameObjects.append(GameObject("titleText3",[game.windowDimensions[0]/2,game.windowDimensions[1]*.74]))
 	findByName("titleText3").addComponent(Text("","pokemon1.ttf"),"text")
-	if len(game.allPlayers)+1==1:
+	if len(game.allPlayers)==0:
 		findByName("titleText").getNamedComponent("text").text = f"Successfully CREATED"
-	elif len(game.allPlayers)+1>1:
+	elif len(game.allPlayers)>0:
 		findByName("titleText").getNamedComponent("text").text = f"Successfully JOINED"
 	else:
 		findByName("titleText").getNamedComponent("text").text = f"Error initializing room!"

@@ -9,13 +9,12 @@ from audio import stopMusic
 
 #all global variables to be used by game
 def __init__():
-	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject , otherPlayers, allPlayers, gameVolume, iconShow
+	global gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject , allPlayers, gameVolume, iconShow
 	iconShow = 0
 	myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
 	ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 	timestep = 1/60
 	gameObjects = []
-	otherPlayers = []
 	allPlayers = []
 	scale=2
 	windowDimensions = [160,144]

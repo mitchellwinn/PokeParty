@@ -43,8 +43,8 @@ class Client(object):
 
         elif msg.purpose == "GETUPDATES":
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
-            game.allPlayers=[]
-            if game.gameState=="inRoom":
+            newAllPlayers=[]
+            if game.gameState=="inRoom" or game.gameState=="conncetingToRoom" :
                 count=1
                 for i in msg.strings:
                     if i.strings[0] == self.id:
@@ -55,8 +55,10 @@ class Client(object):
                     thisPlayer.getNamedComponent("client").name = i.strings[1]
                     thisPlayer.getNamedComponent("client").trainer = i.strings[2]
                     thisPlayer.addComponent(Sprite(str(thisPlayer.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
-                    game.allPlayers.append(thisPlayer)
+                    newAllPlayers.append(thisPlayer)
                     count+=1
+            game.allPlayers = newAllPlayers
+
 
 
 
@@ -129,7 +131,6 @@ class Client(object):
         self.send (toSend.getAsDataString(),True)
         toSend = SimpleData("GETUPDATES",[self.room])
         self.send (toSend.getAsDataString(),True)
-        time.sleep(.75)
         thread = Thread(target=self.getUpdates)
         thread.start()
 
