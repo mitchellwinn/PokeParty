@@ -8,7 +8,6 @@ from text import Text
 from audio import playSound, playMusic, stopMusic
 import pygame as pg
 from client import Client, SimpleData
-from sprite import Sprite
 
 def lobbyStart():
 	join()
@@ -113,19 +112,14 @@ async def inRoom():
 	playMusic("052 National Park.mp3")
 	game.gameObjects.append(GameObject("room",[game.windowDimensions[0]*.05,game.windowDimensions[1]*.1]))
 	findByName("room").addComponent(Text(f"ROOM[{roomName}]","pokemon1.ttf",16,"left"),"text")
-	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]*.175,game.windowDimensions[1]*.35]))
+	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]*.175,game.windowDimensions[1]*.175]))
 	findByName("titleText").addComponent(Text("Waiting for players","pokemon1.ttf",16,"left"),"text")
-	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]*.5]))
+	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]*.25]))
 	findByName("titleText2").addComponent(Text("Press 'R' to READY","pokemon1.ttf"),"text")
-	game.gameObjects.append(GameObject("titleText3",[game.windowDimensions[0]/2,game.windowDimensions[1]*.65]))
+	game.gameObjects.append(GameObject("titleText3",[game.windowDimensions[0]/2,game.windowDimensions[1]*.325]))
 	findByName("titleText3").addComponent(Text("Not all players are READY","pokemon1.ttf"),"text")
-	game.playerObject.transform.position = [game.windowDimensions[0]*.175,game.windowDimensions[1]*0.85]
+	game.playerObject.transform.position = [game.windowDimensions[0]*.165,game.windowDimensions[1]*0.765]
 	game.playerObject.addComponent(Sprite(str(game.playerObject.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
-	try:
-		asyncio.create_task(game.playerObject.getNamedComponent("client").getUpdates())
-		print("created asyncio task getUpdates()")
-	except:
-		print("failed to create asyncio task getUpdates()")
 	i=0
 	while inputDone==False:
 		if game.playerInputs[9]==True:

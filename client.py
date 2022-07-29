@@ -52,10 +52,10 @@ class Client(object):
                     for p in game.allPlayers:
                         if(i.strings[0]==p.getNamedComponent("client").id):
                             p.getNamedComponent("sprite").fileChange(str(p.getNamedComponent("client").trainer)+".png")
-                            p.transform.position = [game.windowDimensions[0]*.175*count,game.windowDimensions[1]*0.85]
+                            p.transform.position = [game.windowDimensions[0]*.165*count,game.windowDimensions[1]*0.85]
                             playerAlreadyExists = True
                     if playerAlreadyExists==False:
-                        thisPlayer = GameObject(i.strings[0],[game.windowDimensions[0]*.175*count,game.windowDimensions[1]*0.85])
+                        thisPlayer = GameObject(i.strings[0],[game.windowDimensions[0]*.165+count*.1675,game.windowDimensions[1]*0.775])
                         thisPlayer.addComponent(Client(self.room),"client")
                         thisPlayer.getNamedComponent("client").id = i.strings[0]
                         thisPlayer.getNamedComponent("client").name = i.strings[1]
@@ -107,10 +107,10 @@ class Client(object):
         print(data)
         return dataString
 
-    async def getUpdates(self):
+    def getUpdates(self):
         print("hi")
         while True:
-            await asyncio.sleep(.75)
+            time.sleep(.75)
             toSend = SimpleData("GETUPDATES",[self.room])
             try:
                 self.send (toSend.getAsDataString(),True)
@@ -133,5 +133,7 @@ class Client(object):
         self.id = reply.strings[0]
         toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name,self.trainer])
         self.send (toSend.getAsDataString(),True)
+        thread = Thread(target=self.getUpdates)
+        thread.start()
 
 

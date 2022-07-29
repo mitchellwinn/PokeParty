@@ -181,6 +181,8 @@ def updateDisplay():
 			drawSprites(gobj.getNamedComponent("sprite"),gobj)
 		if gobj.getNamedComponent("text")!=-1:
 			drawText(gobj.getNamedComponent("text"),gobj)
+	if playerObject.getNamedComponent("sprite")!=-1:
+			drawSprites(playerObject.getNamedComponent("sprite"),playerObject)
 	if full:
 		screen.blit(border,border.get_rect(center=((w/2),(h/2))))	
 	pg.display.update()
