@@ -53,7 +53,7 @@ class Client(object):
                     for p in game.allPlayers:
                         if(i.strings[0]==p.getNamedComponent("client").id):
                             p.getNamedComponent("sprite").fileChange(str(p.getNamedComponent("client").trainer)+".png")
-                            p.transform.position = [game.windowDimensions[0]*.165*count,game.windowDimensions[1]*0.85]
+                            p.transform.position = [game.windowDimensions[0]*.165+1675*count,game.windowDimensions[1]*0.85]
                             playerAlreadyExists = True
                     if playerAlreadyExists==False:
                         thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+count*.1675,game.windowDimensions[1]*0.775])
@@ -134,9 +134,9 @@ class Client(object):
         self.id = reply.strings[0]
         toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name,self.trainer])
         self.send (toSend.getAsDataString(),True)
-        time.sleep(.75)
         toSend = SimpleData("GETUPDATES",[self.room])
         self.send (toSend.getAsDataString(),True)
+        time.sleep(.75)
         thread = Thread(target=self.getUpdates)
         thread.start()
 
