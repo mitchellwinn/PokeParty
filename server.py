@@ -106,12 +106,9 @@ def clientMsgInterpret(conn, addr, msg):
 		players = []
 		for i in rooms:
 			if i.name == msg.strings[0]:
-				try:
-					for k in i.players:
-						players.append(SimpleData("ONLINEPLAYER",[k.id,k.name,k.trainer]))
-					response = SimpleData("GETUPDATES",players)
-				except:
-					print(f"couldnt create SimpleData with players")
+				for k in i.players:
+					players.append(SimpleData("ONLINEPLAYER",[k.id,k.name,k.trainer]))
+				response = SimpleData("GETUPDATES",players)
 				try:
 					send(conn ,response.getAsDataString())
 				except socket.error as e:
