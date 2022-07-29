@@ -88,6 +88,8 @@ def clientMsgInterpret(conn, addr, msg):
 		else:
 			thisClient = Client(msg.strings[0])
 			thisClient.id = msg.strings[1]
+			thisClient.name = msg.strings[2]
+			thisClient.trainer = msg.strings[3]
 			thisRoom.players.append(thisClient)
 			print(f"Adding client:{msg.strings[1]} to EXISTING room {msg.strings[0]}!")
 			print(f"EXISTING room {msg.strings[0]} now has {len(thisRoom.players)} players!")
