@@ -51,7 +51,7 @@ def clientMsgInterpret(conn, addr, msg):
 		#remove player association from the room
 		for i in rooms:
 			for k in i.players:
-				if k.ADDRESS == msg.ADDRESS:
+				if k.id == msg.id:
 					i.players.remove(k)
 		response = SimpleData("!DISCONNECT",[""])
 		send(conn, response.getAsDataString())
@@ -79,13 +79,13 @@ def clientMsgInterpret(conn, addr, msg):
 				response = SimpleData("!DISCONNECT",[msg.strings[0]])
 				send(conn ,response.getAsDataString())
 				return
-			thisClient.ADDRESS = msg.strings[1]
+			thisClient.id = msg.strings[1]
 			thisRoom.players.append(thisClient)
 			rooms.append(thisRoom)
 			print(f"Adding client:{msg.strings[1]} to NEW room {msg.strings[0]}!")
 		else:
 			thisClient = Client(msg.strings[0])
-			thisClient.ADDRESS = msg.strings[1]
+			thisClient.id = msg.strings[1]
 			thisRoom.players.append(thisClient)
 			print(f"Adding client:{msg.strings[1]} to EXISTING room {msg.strings[0]}!")
 		response = SimpleData("SETROOM",[msg.strings[0]])
@@ -96,15 +96,14 @@ def clientMsgInterpret(conn, addr, msg):
 		for i in rooms:
 			if i.name == msg.room:
 				for k in i.players:
-					if k.id == msg.id:
-						k = msg
+					
 	#-----
 	#-----updates clients knowledge of all players in a room
 	elif msg.purpose=="GETUPDATES":
 		for i in rooms:
 			if i.name == msg.room:
-				dataString = pickle.dumps(i.players)
-				send(conn ,dataString)
+				response = SimpleData("GETUPDATES",i.players)
+				send(conn ,response.getAsDataString())
 	return connected
 
 def handleClient(conn, addr):

@@ -9,6 +9,7 @@ import pygame as pg
 from client import Client
 
 def lobbyStart():
+	game.frame = 0
 	join()
 
 

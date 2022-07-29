@@ -32,24 +32,15 @@ class Client(object):
         elif msg.purpose == "SETROOM":
             self.room = msg.strings[0]
             print("updated room!")
-        elif msg[0].purpose == "GETUPDATES":
+        elif msg.purpose == "GETUPDATES":
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
-            for i in game.otherPlayers:
-                i.removeFromClient = True
-                for thisMsg in msg:
-                    if thisMsg.id == self.id:
-                        continue
-                    referenceExists = False
-                    if i.id == thisMsg.id:
-                        referenceExists = True
-                        i.removeFromClient = False
-                        i = thisMsg
-                    elif referenceExists == False:
-                        game.otherPlayers.append(msg)
-                if(i.removeFromClient):
-                    game.otherPlayers.remove(i)
-            game.allPlayersInRoom = game.otherPlayers
-            game.allPlayersInRoom.append(game.playerObject)
+            game.allPlayers = msg.strings
+            for i in game.allPlayers:
+                if i.id == self.id:
+                    i = self
+                    break
+            
+
 
     def send(self, data):
         try:
@@ -62,7 +53,7 @@ class Client(object):
             reply = pickle.loads(reply)
             print(f"Purpose: {reply.purpose}")
             #interpret the reply and do something client sided in response
-            serverMsgInterpret(reply)
+            self.serverMsgInterpret(reply)
         except socket.error as e:
             print(f"[SOCKET ERROR]: {e}")
             return -1
@@ -99,5 +90,6 @@ class Client(object):
         reply = pickle.loads(reply)
         self.id = reply.strings[0]
         toSend = SimpleData("ROOM",[self.desiredRoom,self.id])
-        print(toSend.toString())
+        self.send (toSend.getAsDataString())
+        toSend = SimpleData("GETUPDATES",[])
         self.send (toSend.getAsDataString())
