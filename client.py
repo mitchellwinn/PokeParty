@@ -56,7 +56,7 @@ class Client(object):
                             p.transform.position = [game.windowDimensions[0]*.165+1675*count,game.windowDimensions[1]*0.85]
                             playerAlreadyExists = True
                         for i2 in msg.strings:
-                            if p.getNamedComponent("client").id == i2.strings[0]
+                            if p.getNamedComponent("client").id == i2.strings[0]:
                             shouldExist = True
                         if(shouldExist==False):
                             game.allPlayers.remove(p)
