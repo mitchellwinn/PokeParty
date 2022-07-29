@@ -14,7 +14,6 @@ def lobbyStart():
 
 def join():
 	time.sleep(.25)
-	game.frame = 0
 	global roomName
 	roomName = ""
 	inputDone = False
@@ -24,6 +23,7 @@ def join():
 	findByName("titleText").addComponent(Text("Enter Room Name!","pokemon1.ttf"),"text")
 	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]/1.8]))
 	findByName("titleText2").addComponent(Text("","pokemon1.ttf"),"text")
+	game.frame = 0
 	blinker = " "
 	i=0
 	user_text = ""
