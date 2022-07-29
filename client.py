@@ -55,7 +55,7 @@ class Client(object):
                             p.transform.position = [game.windowDimensions[0]*.165*count,game.windowDimensions[1]*0.85]
                             playerAlreadyExists = True
                     if playerAlreadyExists==False:
-                        thisPlayer = GameObject(i.strings[0],[game.windowDimensions[0]*.165+count*.1675,game.windowDimensions[1]*0.775])
+                        thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+count*.1675,game.windowDimensions[1]*0.775])
                         thisPlayer.addComponent(Client(self.room),"client")
                         thisPlayer.getNamedComponent("client").id = i.strings[0]
                         thisPlayer.getNamedComponent("client").name = i.strings[1]
