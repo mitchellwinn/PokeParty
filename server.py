@@ -90,6 +90,7 @@ def clientMsgInterpret(conn, addr, msg):
 			thisClient.id = msg.strings[1]
 			thisRoom.players.append(thisClient)
 			print(f"Adding client:{msg.strings[1]} to EXISTING room {msg.strings[0]}!")
+			print(f"EXISTING room {msg.strings[0]} now has {len(thisRoom.players)} players!")
 		response = SimpleData("SETROOM",[msg.strings[0]])
 		send(conn ,response.getAsDataString())
 	#-----

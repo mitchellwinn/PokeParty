@@ -48,7 +48,7 @@ class Client(object):
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
-                        playerAlreadyExists = False
+                    playerAlreadyExists = False
                     for p in game.allPlayers:
                         if(i.strings[0]==p.getNamedComponent("client").id):
                             p.getNamedComponent("sprite").fileChange(str(p.getNamedComponent("client").trainer)+".png")
