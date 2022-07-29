@@ -1,6 +1,7 @@
 import socket
 import pickle
 import asyncio
+import random
 import game
 import os
 from threading import Thread
