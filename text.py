@@ -1,3 +1,4 @@
+import game
 import pygame as pg
 import asyncio
 
@@ -15,4 +16,7 @@ class Text(object):
 			self.anchor = args[3]
 		else:
 			self.anchor = "center"
+		self.font = pg.font.Font(self.filePath+self.file,round(self.size*(game.scale/2)))
+		self.img = self.font.render(self.text, True, (0,0,0), (255,255,255))
+		self.rect = self.img.get_rect()
 		

@@ -78,9 +78,9 @@ def connectRoom(room):
 		return
 	game.gameObjects.clear()
 	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]*.4]))
-	game.playerObject.findByName("titleText").addComponen("","pokemon1.ttf")
+	findByName("titleText").addComponent(Text("","pokemon1.ttf"),"text")
 	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]*.6]))
-	game.playerObject.findByName("titleText2").addComponent("","pokemon1.ttf")
+	findByName("titleText2").addComponent(Text("","pokemon1.ttf"),"text")
 	if len(game.allPlayers)==1:
 		findByName("titleText").getNamedComponent("text").text = f"Successfully CREATED {room}!"
 	elif len(game.allPlayers)>1:
@@ -93,8 +93,8 @@ def connectRoom(room):
 		game.gameObjects.clear()
 		return
 	findByName("titleText2").getNamedComponent("text").text = f"{len(game.allPlayers)} players so far."
-	playSound("SFX_PRESS_AB.wav")
-	time.sleep(.75)
+	playSound("SFX_HEAL_AILMENT.wav")
+	time.sleep(1.5)
 	game.gameState = "inRoom"
 	roomName = game.playerObject.getNamedComponent("client").room
 	inRoom()
@@ -107,7 +107,7 @@ def inRoom():
 	time.sleep(.25)
 	playMusic("052 National Park.mp3")
 	game.gameObjects.append(GameObject("room",[game.windowDimensions[0]*.05,game.windowDimensions[1]*.1]))
-	findByName("room").addComponent(Text(f"ROOM[{roomname}]","pokemon1.ttf",16,"left"),"text")
+	findByName("room").addComponent(Text(f"ROOM[{roomName}]","pokemon1.ttf",16,"left"),"text")
 	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]*.175,game.windowDimensions[1]*.35]))
 	findByName("titleText").addComponent(Text("Waiting for players","pokemon1.ttf",16,"left"),"text")
 	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]*.5]))
