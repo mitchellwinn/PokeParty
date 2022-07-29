@@ -1,6 +1,7 @@
 import game
 import time
 import random
+import asyncio
 from gameobject import GameObject, findByName
 from sprite import Sprite
 from text import Text
@@ -100,9 +101,9 @@ def connectRoom(room):
 	time.sleep(2.5)
 	game.gameState = "inRoom"
 	roomName = game.playerObject.getNamedComponent("client").room
-	inRoom()
+	asyncio.run(inRoom())
 
-def inRoom():
+async def inRoom():
 	global roomName,ready
 	game.gameObjects.clear()
 	ready = False
@@ -119,6 +120,7 @@ def inRoom():
 	findByName("titleText3").addComponent(Text("Not all players are READY","pokemon1.ttf"),"text")
 	game.playerObject.transform.position = [game.windowDimensions[0]*.175,game.windowDimensions[1]*0.85]
 	game.playerObject.addComponent(Sprite(str(game.playerObject.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
+	asyncio.create_task(game.playerObject.getNamedComponent("client").getUpdates())
 	i=0
 	while inputDone==False:
 		if game.playerInputs[9]==True:

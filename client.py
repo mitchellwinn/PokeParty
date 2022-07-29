@@ -4,6 +4,7 @@ import asyncio
 import random
 import game
 import os
+import time
 from threading import Thread
 from gameobject import GameObject
 
@@ -103,6 +104,12 @@ class Client(object):
         print(data)
         return dataString
 
+    async def getUpdates(self):
+        while True:
+            await asyncio.sleep(.75)
+            toSend = SimpleData("GETUPDATES",[self.room])
+            self.send (toSend.getAsDataString(),True)
+
     def connect(self):
         try:
             self.id =  self.client.connect(self.addr)
@@ -118,12 +125,5 @@ class Client(object):
         self.id = reply.strings[0]
         toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name,self.trainer])
         self.send (toSend.getAsDataString(),True)
-        toSend = SimpleData("GETUPDATES",[self.room])
-        self.send (toSend.getAsDataString(),True)
-        asyncio.create_task(getUpdates())
 
-    async def getUpdates():
-        await asyncio.sleep(.75)
-        toSend = SimpleData("GETUPDATES",[self.room])
-        self.send (toSend.getAsDataString(),True)
 
