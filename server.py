@@ -53,8 +53,6 @@ def clientMsgInterpret(conn, addr, msg):
 			for k in i.players:
 				if k.id == msg.id:
 					i.players.remove(k)
-		response = SimpleData("!DISCONNECT",[""])
-		send(conn, response.getAsDataString())
 		connected = False
 	#-----
 	#-----check room status before player is allowed to join
@@ -102,7 +100,7 @@ def clientMsgInterpret(conn, addr, msg):
 	#-----updates clients knowledge of all players in a room
 	elif msg.purpose=="GETUPDATES":
 		for i in rooms:
-			if i.name == msg.room:
+			if i.name == msg.strings[0]:
 				response = SimpleData("GETUPDATES",i.players)
 				send(conn ,response.getAsDataString())
 	return connected

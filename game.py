@@ -105,7 +105,7 @@ async def gameMain():
 	stopMusic()
 	pg.display.quit()
 	try:
-		playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[""]).getAsDataString())
+		playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[""]).getAsDataString(),False)
 	except:
 		print("Failed to send !DISCONNECT message")
 	quit()
