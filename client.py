@@ -134,6 +134,9 @@ class Client(object):
         self.id = reply.strings[0]
         toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name,self.trainer])
         self.send (toSend.getAsDataString(),True)
+        time.sleep(.75)
+        toSend = SimpleData("GETUPDATES",[self.room])
+        self.send (toSend.getAsDataString(),True)
         thread = Thread(target=self.getUpdates)
         thread.start()
 

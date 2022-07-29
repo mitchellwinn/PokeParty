@@ -176,7 +176,7 @@ def updateDisplay():
 	global screen, scale, full,w ,h, frame, border
 	w, h = screen.get_size()
 	screen.fill([255,255,255])
-	for gobj in gameObjects:
+	for gobj in (gameObjects+allPlayers):
 		if gobj.getNamedComponent("sprite")!=-1:
 			drawSprites(gobj.getNamedComponent("sprite"),gobj)
 		if gobj.getNamedComponent("text")!=-1:
