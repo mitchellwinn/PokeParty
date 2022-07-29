@@ -52,7 +52,7 @@ class Client(object):
                             p.getNamedComponent("sprite").fileChange(str(p.getNamedComponent("client").trainer)+".png")
                             p.transform.position = [game.windowDimensions[0]*.175*count,game.windowDimensions[1]*0.85]
                             playerAlreadyExists = True
-                    if(playerAlreadyExists==False)
+                    if playerAlreadyExists==False:
                         thisPlayer = GameObject(i.strings[0],[game.windowDimensions[0]*.175*count,game.windowDimensions[1]*0.85])
                         thisPlayer.addComponent(Client(self.room),"client")
                         thisPlayer.getNamedComponent("client").id = i.strings[0]
