@@ -76,7 +76,7 @@ def clientMsgInterpret(conn, addr, msg):
 				print("could not make Room/Client server instance!")
 				response = SimpleData("!DISCONNECT",[msg.strings[0]])
 				send(conn ,response.getAsDataString())
-				break
+				return connected
 			thisClient.id = msg.strings[1]
 			thisRoom.players.append(thisClient)
 			rooms.append(thisRoom)
