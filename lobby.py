@@ -24,6 +24,7 @@ def join():
 	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]/1.8]))
 	findByName("titleText2").addComponent(Text("","pokemon1.ttf"),"text")
 	game.frame = 0
+	game.updateDisplay()
 	blinker = " "
 	i=0
 	user_text = ""
