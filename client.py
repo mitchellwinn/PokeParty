@@ -57,7 +57,7 @@ class Client(object):
                             playerAlreadyExists = True
                         for i2 in msg.strings:
                             if p.getNamedComponent("client").id == i2.strings[0]:
-                            shouldExist = True
+                                shouldExist = True
                         if(shouldExist==False):
                             game.allPlayers.remove(p)
                     if playerAlreadyExists==False:
