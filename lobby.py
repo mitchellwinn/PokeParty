@@ -78,7 +78,9 @@ def connectRoom(room):
 		return
 	game.gameObjects.clear()
 	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]*.4]))
+	game.playerObject.findByName("titleText").addComponen("","pokemon1.ttf")
 	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]*.6]))
+	game.playerObject.findByName("titleText2").addComponent("","pokemon1.ttf")
 	if len(game.allPlayers)==1:
 		findByName("titleText").getNamedComponent("text").text = f"Successfully CREATED {room}!"
 	elif len(game.allPlayers)>1:
