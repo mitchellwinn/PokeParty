@@ -39,13 +39,15 @@ class Client(object):
                 if i.id == self.id:
                     i = self
                     break
-            
 
 
-    def send(self, data):
+
+    def send(self, data, wait):
         try:
             #send desired communication to server
             self.client.send(data)
+            if wait==False:
+                return
             print(f"Sent data to server!\nWaiting on response...!")
             #get desired communication from server
             reply = self.client.recv(self.header)
@@ -90,6 +92,6 @@ class Client(object):
         reply = pickle.loads(reply)
         self.id = reply.strings[0]
         toSend = SimpleData("ROOM",[self.desiredRoom,self.id])
-        self.send (toSend.getAsDataString())
-        toSend = SimpleData("GETUPDATES",[])
-        self.send (toSend.getAsDataString())
+        self.send (toSend.getAsDataString(),True)
+        toSend = SimpleData("GETUPDATES",[self.room])
+        self.send (toSend.getAsDataString(),True)
