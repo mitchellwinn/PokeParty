@@ -100,13 +100,18 @@ def clientMsgInterpret(conn, addr, msg):
 	elif msg.purpose=="GETUPDATES":
 		for i in rooms:
 			if i.name == msg.strings[0]:
-				response = SimpleData("GETUPDATES",i.players)
+				try:
+					response = SimpleData("GETUPDATES",i.players)
+				except:
+					print(f"couldnt create SimpleData with i,players")
 				try:
 					send(conn ,response.getAsDataString())
 				except socket.error as e:
 					print(f"failed to send a response... error:{e}")
 					response = SimpleData("!DISCONNECT",[""])
-					send(conn ,response.getAsDataString())
+					try:
+						send(conn ,response.getAsDataString())
+						print(f"failed to send a disconnect message... error:{e}")
 	#-----
 	#-----
 	return connected

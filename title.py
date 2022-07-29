@@ -20,7 +20,7 @@ async def titleGo():
 	findByName("titleText").destroy()
 	findByName("titleText2").destroy()
 	await asyncio.sleep(.25)
-	playSound("SFX_INTRO_CRASH.wav")
+	#playSound("SFX_INTRO_CRASH.wav")
 	game.gameObjects.append(GameObject("titlePokemon",[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]))
 	game.gameObjects.append(GameObject("titleTrainer",[game.windowDimensions[0]*.165,game.windowDimensions[1]*.775]))
 	findByName("titleTrainer").addComponent(Sprite(str(random.randint(1,34))+".png","trainers\\"),"sprite")
@@ -29,6 +29,8 @@ async def titleGo():
 	findByName("title").addComponent(Sprite("title1black.png","title\\"),"sprite")
 	await(findByName("title").transform.moveOverTime([game.windowDimensions[0]/2,game.windowDimensions[1]/3],.45))
 	findByName("title").getNamedComponent("sprite").fileChange("title1.png")
+	playSound("SFX_INTRO_CRASH.wav")
+	await asyncio.sleep(.25)
 
 async def titleMenu():
 	game.gameObjects.append(GameObject("menu1",[game.windowDimensions[0]*.85,game.windowDimensions[1]*.715]))
