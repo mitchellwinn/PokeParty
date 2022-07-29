@@ -38,7 +38,6 @@ class Client(object):
             game.allPlayers.clear()
             for i in msg.strings:
                 if i.strings[0] == self.id:
-                    game.allPlayers.append(self)
                     continue
                 game.allPlayers.append(i)
 

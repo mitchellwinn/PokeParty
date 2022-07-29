@@ -61,6 +61,7 @@ async def titleMenu():
 				while thread.is_alive():
 					await asyncio.sleep(0)
 				game.gameState = "title"
+				return
 			if choice==1:
 				await asyncio.sleep(.25)
 				game.programLive = False

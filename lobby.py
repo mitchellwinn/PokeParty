@@ -6,7 +6,7 @@ from sprite import Sprite
 from text import Text
 from audio import playSound, playMusic, stopMusic
 import pygame as pg
-from client import Client
+from client import Client, SimpleData
 
 def lobbyStart():
 	join()
@@ -77,14 +77,16 @@ def connectRoom(room):
 		game.gameObjects.clear()
 		return
 	game.gameObjects.clear()
-	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]*.4]))
+	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]*.36]))
 	findByName("titleText").addComponent(Text("","pokemon1.ttf"),"text")
-	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]*.6]))
+	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]*.5]))
 	findByName("titleText2").addComponent(Text("","pokemon1.ttf"),"text")
-	if len(game.allPlayers)==1:
-		findByName("titleText").getNamedComponent("text").text = f"Successfully CREATED {room}!"
-	elif len(game.allPlayers)>1:
-		findByName("titleText").getNamedComponent("text").text = f"Successfully JOINED {room}!"
+	game.gameObjects.append(GameObject("titleText3",[game.windowDimensions[0]/2,game.windowDimensions[1]*.74]))
+	findByName("titleText3").addComponent(Text("","pokemon1.ttf"),"text")
+	if len(game.allPlayers+1)==1:
+		findByName("titleText").getNamedComponent("text").text = f"Successfully CREATED"
+	elif len(game.allPlayers+1)>1:
+		findByName("titleText").getNamedComponent("text").text = f"Successfully JOINED"
 	else:
 		findByName("titleText").getNamedComponent("text").text = f"Error initializing room!"
 		playSound("SFX_PRESS_AB.wav")
@@ -92,9 +94,10 @@ def connectRoom(room):
 		#game.gameState = "title"
 		game.gameObjects.clear()
 		return
-	findByName("titleText2").getNamedComponent("text").text = f"{len(game.allPlayers)} players so far."
+	findByName("titleText2").getNamedComponent("text").text = f"{room}!"
+	findByName("titleText3").getNamedComponent("text").text = f"{len(game.allPlayers)} players so far."
 	playSound("SFX_HEAL_AILMENT.wav")
-	time.sleep(1.5)
+	time.sleep(2.5)
 	game.gameState = "inRoom"
 	roomName = game.playerObject.getNamedComponent("client").room
 	inRoom()
@@ -118,9 +121,11 @@ def inRoom():
 	while inputDone==False:
 		if game.playerInputs[9]==True:
 			stopMusic()
+			game.playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[playerObject.getNamedComponent("client").id]).getAsDataString(),False)
 			playSound("SFX_PRESS_AB.wav")
 			game.gameState = "title"
 			game.gameObjects.clear()
+			inputDone = True
 			return
 		if ready==False:
 			findByName("titleText2").getNamedComponent("text").text = "Press 'R' to READY"
