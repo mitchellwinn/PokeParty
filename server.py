@@ -132,8 +132,8 @@ def handleClient(conn, addr):
 			except:
 				print(f"Client:{addr} sent data that could not be unpacked by pickled.loads(data)")
 			connected = clientMsgInterpret(conn, addr, data)
-		except:
-			print(f"Client:{addr} sent data that the server could not respond to")
+		except socket.error as e:
+			print(f"Client:{addr} sent data that the server could not respond to. error:{e}")
 			continue
 	conn.close()
 
