@@ -54,7 +54,7 @@ def clientMsgInterpret(conn, addr, msg):
 				if k.id == msg.strings[0]:
 					i.players.remove(k)
 			if len(i.players)==0:
-			rooms.remove(i)
+				rooms.remove(i)
 		connected = False
 	#-----
 	#-----check room status before player is allowed to join
