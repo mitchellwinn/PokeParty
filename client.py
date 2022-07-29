@@ -37,7 +37,8 @@ class Client(object):
             game.allPlayers.clear()
             for i in msg.strings:
                 if i.strings[0] == self.id:
-                    i = self
+                    game.allPlayers.append(self)
+                    continue
                 game.allPlayers.append(i)
 
     def send(self, data, wait):
@@ -60,6 +61,7 @@ class Client(object):
 
     def __init__(self, room):
         self.connected = "UNDECIDED"
+        self.name = print(os.getlogin( )[0:os.getlogin( ).find(" ")])
         self.header = 4096
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = '173.255.244.44'
@@ -89,7 +91,7 @@ class Client(object):
         print(f"Got response from server!")
         reply = pickle.loads(reply)
         self.id = reply.strings[0]
-        toSend = SimpleData("ROOM",[self.desiredRoom,self.id])
+        toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name])
         self.send (toSend.getAsDataString(),True)
         toSend = SimpleData("GETUPDATES",[self.room])
         self.send (toSend.getAsDataString(),True)

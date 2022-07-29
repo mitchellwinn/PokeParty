@@ -78,6 +78,7 @@ def clientMsgInterpret(conn, addr, msg):
 				send(conn ,response.getAsDataString())
 				return connected
 			thisClient.id = msg.strings[1]
+			thisClient.name = msg.strings[2]
 			thisRoom.players.append(thisClient)
 			rooms.append(thisRoom)
 			print(f"Adding client:{msg.strings[1]} to NEW room {msg.strings[0]}!")
@@ -103,7 +104,7 @@ def clientMsgInterpret(conn, addr, msg):
 			if i.name == msg.strings[0]:
 				try:
 					for k in i.players:
-						players.append(SimpleData("ONLINEPLAYER",[k.id]))
+						players.append(SimpleData("ONLINEPLAYER",[k.id,k.name]))
 					response = SimpleData("GETUPDATES",players)
 				except:
 					print(f"couldnt create SimpleData with players")

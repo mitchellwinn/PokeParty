@@ -59,6 +59,7 @@ def join():
 		time.sleep(game.timestep)
 
 def connectRoom(room):
+	global roomName
 	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]*.5]))
 	findByName("titleText").addComponent(Text("PLEASE  WAIT","pokemon1.ttf"),"text")
 	if game.playerObject.getNamedComponent("client")==-1:
@@ -74,25 +75,30 @@ def connectRoom(room):
 		time.sleep(.75)
 		game.gameObjects.clear()
 		return
+	game.gameObjects.clear()
+	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]*.4]))
+	game.gameObjects.append(GameObject("titleText2",[game.windowDimensions[0]/2,game.windowDimensions[1]*.6]))
 	if len(game.allPlayers)==1:
-		findByName("titleText").getNamedComponent("text").text = f"Successfully CREATED {room}!{len(game.allPlayers)}/{4}"
+		findByName("titleText").getNamedComponent("text").text = f"Successfully CREATED {room}!"
 	elif len(game.allPlayers)>1:
-		findByName("titleText").getNamedComponent("text").text = f"Successfully JOINED {room}!{len(game.allPlayers)}/{4}"
+		findByName("titleText").getNamedComponent("text").text = f"Successfully JOINED {room}!"
 	else:
-		findByName("titleText").getNamedComponent("text").text = f"Error occured initializing room!"
+		findByName("titleText").getNamedComponent("text").text = f"Error initializing room!"
 		playSound("SFX_PRESS_AB.wav")
 		time.sleep(.75)
 		#game.gameState = "title"
 		game.gameObjects.clear()
 		return
+	findByName("titleText2").getNamedComponent("text").text = f"{len(game.allPlayers)} players so far."
 	playSound("SFX_PRESS_AB.wav")
 	time.sleep(.75)
 	game.gameState = "inRoom"
+	roomName = game.playerObject.getNamedComponent("client").room
 	inRoom()
-
 
 def inRoom():
 	global roomName,ready
+	game.gameObjects.clear()
 	ready = False
 	inputDone = False
 	time.sleep(.25)
@@ -105,7 +111,6 @@ def inRoom():
 	findByName("titleText2").addComponent(Text("Press 'R' to READY","pokemon1.ttf"),"text")
 	game.gameObjects.append(GameObject("titleText3",[game.windowDimensions[0]/2,game.windowDimensions[1]*.65]))
 	findByName("titleText3").addComponent(Text("Not all players are READY","pokemon1.ttf"),"text")
-	blinker = " "
 	i=0
 	while inputDone==False:
 		if game.playerInputs[9]==True:
