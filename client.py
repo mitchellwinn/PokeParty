@@ -7,6 +7,7 @@ import os
 import time
 from threading import Thread
 from gameobject import GameObject
+from sprite import Sprite
 
 
 
