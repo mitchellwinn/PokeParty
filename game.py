@@ -5,6 +5,7 @@ import random
 from sprite import Sprite
 from gameobject import findByName, GameObject
 from client import SimpleData
+from audio import stopMusic
 
 #all global variables to be used by game
 def __init__():
@@ -101,6 +102,7 @@ async def gameMain():
 		updateDisplay()
 		await asyncio.sleep(timestep)
 		frame+=1
+	stopMusic()
 	pg.display.quit()
 	try:
 		playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[""]).getAsDataString())

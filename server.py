@@ -96,6 +96,7 @@ def clientMsgInterpret(conn, addr, msg):
 		for i in rooms:
 			if i.name == msg.room:
 				for k in i.players:
+					print("")
 					
 	#-----
 	#-----updates clients knowledge of all players in a room
