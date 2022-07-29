@@ -76,7 +76,7 @@ def clientMsgInterpret(conn, addr, msg):
 				print("could not make Room/Client server instance!")
 				response = SimpleData("!DISCONNECT",[msg.strings[0]])
 				send(conn ,response.getAsDataString())
-				return
+				break
 			thisClient.id = msg.strings[1]
 			thisRoom.players.append(thisClient)
 			rooms.append(thisRoom)
@@ -94,15 +94,17 @@ def clientMsgInterpret(conn, addr, msg):
 		for i in rooms:
 			if i.name == msg.room:
 				for k in i.players:
-					print("")
-					
+					print("")					
 	#-----
 	#-----updates clients knowledge of all players in a room
 	elif msg.purpose=="GETUPDATES":
 		for i in rooms:
 			if i.name == msg.strings[0]:
 				response = SimpleData("GETUPDATES",i.players)
-				send(conn ,response.getAsDataString())
+				try:
+					send(conn ,response.getAsDataString())
+				except:
+					print("failed to send a response...")
 	return connected
 
 def handleClient(conn, addr):
