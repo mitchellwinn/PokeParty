@@ -51,7 +51,7 @@ def clientMsgInterpret(conn, addr, msg):
 		#remove player association from the room
 		for i in rooms:
 			for k in i.players:
-				if k.id == msg.id:
+				if k.id == msg[0]:
 					i.players.remove(k)
 		connected = False
 	#-----
