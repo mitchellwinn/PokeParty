@@ -103,7 +103,7 @@ def clientMsgInterpret(conn, addr, msg):
 				try:
 					response = SimpleData("GETUPDATES",i.players)
 				except:
-					print(f"couldnt create SimpleData with i,players")
+					print(f"couldnt create SimpleData with i.players")
 				try:
 					send(conn ,response.getAsDataString())
 				except socket.error as e:
@@ -119,21 +119,21 @@ def clientMsgInterpret(conn, addr, msg):
 
 def handleClient(conn, addr):
 	global HEADER
-	print(f"[NEW CONNECTION] client:{addr} connected!") 
+	print(f"[NEW CONNECTION] Client:{addr} connected!") 
 	connected = True
 	response = SimpleData("SETID",[addr])
 	send(conn ,response.getAsDataString())
 	while connected:
-		print(f"client:{addr} receiving data...")
+		print(f"Client:{addr} receiving data...")
 		data = conn.recv(HEADER)
 		try:
 			try:
 				data = pickle.loads(data)
 			except:
-				print(f"client:{addr} sent data that could not be unpacked by pickled.loads(data)")
+				print(f"Client:{addr} sent data that could not be unpacked by pickled.loads(data)")
 			connected = clientMsgInterpret(conn, addr, data)
 		except:
-			print(f"client:{addr} sent data that the server could not respond to")
+			print(f"Client:{addr} sent data that the server could not respond to")
 			continue
 	conn.close()
 
