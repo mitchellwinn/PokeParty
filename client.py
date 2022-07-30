@@ -55,7 +55,7 @@ class Client(object):
                     except:
                         print("")
                     game.gameObjects.append(GameObject("label"+str(self.id),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.5]))
-                    findByName("label"+str(self.id)).addComponent(Text(self.name,"pokemon1.ttf"),"text")
+                    findByName("label"+str(i.strings[0])).addComponent(Text(self.name,"pokemon1.ttf"),"text")
                     thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.775])
                     thisPlayer.addComponent(Client(self.room),"client")
                     thisPlayer.getNamedComponent("client").id = i.strings[0]
@@ -63,7 +63,7 @@ class Client(object):
                     thisPlayer.getNamedComponent("client").trainer = i.strings[2]
                     thisPlayer.getNamedComponent("client").starter = i.strings[3]
                     if game.gameState=="inRoom":
-                        thisPlayer.addComponent(Sprite(str(thisPlayer.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
+                        thisPlayer.addComponent(Sprite(str(i.strings[2])+".png","trainers\\","png"),"sprite")
                     newAllPlayers.append(thisPlayer)
                     count+=1
                 count =1
@@ -75,7 +75,7 @@ class Client(object):
                     except:
                         print("")
                     game.gameObjects.append(GameObject("pokemon"+str(self.id),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
-                    findByName("pokemon"+str(self.id)).addComponent(Sprite(str(thisPlayer.getNamedComponent("client").starter)+".png","pokemon\\","png"),"sprite")
+                    findByName("pokemon"+i.strings[0]).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite")
             game.allPlayers = newAllPlayers
 
 
