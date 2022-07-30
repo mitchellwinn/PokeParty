@@ -62,5 +62,8 @@ class Transform(object):
 			await asyncio.sleep(game.timestep)
 		self.position = newPos
 
+	def sortOrder(self):
+		return self.position[1]
+
     
 

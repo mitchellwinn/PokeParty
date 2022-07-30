@@ -172,13 +172,17 @@ def fullscreen():
 def instantiate(name,position):
 	gameObjects.append(GameObject(name,position))
 
+def sortDisplay(e):
+	return e.transform.sortOrder()
+
 def updateDisplay():
 	global screen, scale, full,w ,h, frame, border
 	w, h = screen.get_size()
 	screen.fill([255,255,255])
-	if playerObject.getNamedComponent("sprite")!=-1:
-			drawSprites(playerObject.getNamedComponent("sprite"),playerObject)
-	for gobj in (gameObjects+allPlayers):
+	everything = (gameObjects+allPlayers)
+	everything.append(playerObject)
+	everything.sort(key=sortDisplay)
+	for gobj in (everything):
 		if gobj.getNamedComponent("sprite")!=-1:
 			drawSprites(gobj.getNamedComponent("sprite"),gobj)
 		if gobj.getNamedComponent("text")!=-1:
