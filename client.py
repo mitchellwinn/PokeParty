@@ -63,7 +63,7 @@ class Client(object):
                         except:
                             print("")
                         game.gameObjects.append(GameObject("label"+str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.5+((count+1)%2)*.1]))
-                        forfindByName("label"+str(i.strings[0])).addComponent(Text(i.strings[1],"pokemon1.ttf"),"text")
+                        findByName("label"+str(i.strings[0])).addComponent(Text(i.strings[1],"pokemon1.ttf"),"text")
                     newAllPlayers.append(thisPlayer)
                     count+=1
                 count =1
