@@ -132,7 +132,7 @@ async def inRoom():
 	game.gameObjects.append(GameObject("label"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.165,game.windowDimensions[1]*.5]))
 	findByName("label"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Text(str(game.playerObject.getNamedComponent("client").name),"pokemon1.ttf"),"text")
 	game.gameObjects.append(GameObject("pokemon"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.255,game.windowDimensions[1]*0.855]))
-	findByName("pokemon"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite(str(game.playerObject.getNamedComponent("client").starter)+".png","pokemon\\","png"),"sprite")
+	findByName("pokemon"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite(str(game.playerObject.getNamedComponent("client").idstarter)+".png","pokemon\\","png"),"sprite")
 	i=0
 	game.typing = True
 	while inputDone==False:
@@ -175,8 +175,8 @@ async def inRoom():
 			thisClient.starter+=-1
 			if(thisClient.starter<0):
 				thisClient.starter=5
-			thisClient.starter=game.starterList[thisClient.starter]
-			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(game.starterList[thisClient.starter])+".png")
+			thisClient.idstarter=game.starterList[thisClient.starter]
+			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(thisClient.idstarter)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		elif game.playerInputs[4]==True:
@@ -186,7 +186,7 @@ async def inRoom():
 			if(thisClient.starter>5):
 				thisClient.starter=0
 			thisClient.idstarter=game.starterList[thisClient.starter]
-			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(game.starterList[thisClient.starter])+".png")
+			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(thisClient.idstarter)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		if ready==False:
