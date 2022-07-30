@@ -8,6 +8,7 @@ import time
 from threading import Thread
 from gameobject import GameObject, findByName
 from sprite import Sprite
+from text import Text
 
 
 
