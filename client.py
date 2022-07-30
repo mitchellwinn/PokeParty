@@ -47,6 +47,15 @@ class Client(object):
             newAllPlayers=[]
             if True:
                 count=1
+                for p in game.allPlayers:
+                    delete = False
+                    for i in msg.strings:
+                        if p.getNamedComponent("client").id == i.strings[0]:
+                            delete = True
+                    if(delete):
+                        game.gameObjects.remove(findByName("label"+str(p.getNamedComponent("client").id)))
+                        game.gameObjects.remove(findByName("pokemon"+str(p.getNamedComponent("client").id)))
+
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
@@ -62,7 +71,7 @@ class Client(object):
                             game.gameObjects.remove(findByName("label"+str(i.strings[0])))
                         except:
                             print("")
-                        game.gameObjects.append(GameObject("label"+str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.5+((count)%2)*.1]))
+                        game.gameObjects.append(GameObject("label"+str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*(0.5+((count)%2)*.1)]))
                         findByName("label"+str(i.strings[0])).addComponent(Text(i.strings[1],"pokemon1.ttf"),"text")
                     newAllPlayers.append(thisPlayer)
                     count+=1
