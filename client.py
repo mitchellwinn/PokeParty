@@ -50,12 +50,6 @@ class Client(object):
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
-                    try:
-                        game.gameObjects.remove(findByName("label"+str(i.strings[0])))
-                    except:
-                        print("")
-                    game.gameObjects.append(GameObject("label"+str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.5]))
-                    findByName("label"+str(i.strings[0])).addComponent(Text(i.strings[1],"pokemon1.ttf"),"text")
                     thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.775])
                     thisPlayer.addComponent(Client(self.room),"client")
                     thisPlayer.getNamedComponent("client").id = i.strings[0]
@@ -64,6 +58,12 @@ class Client(object):
                     thisPlayer.getNamedComponent("client").starter = i.strings[3]
                     if game.gameState=="inRoom":
                         thisPlayer.addComponent(Sprite(str(i.strings[2])+".png","trainers\\","png"),"sprite")
+                        try:
+                            game.gameObjects.remove(findByName("label"+str(i.strings[0])))
+                        except:
+                            print("")
+                        game.gameObjects.append(GameObject("label"+str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.5+((count+1)%2)*.1]))
+                        forfindByName("label"+str(i.strings[0])).addComponent(Text(i.strings[1],"pokemon1.ttf"),"text")
                     newAllPlayers.append(thisPlayer)
                     count+=1
                 count =1
@@ -74,8 +74,9 @@ class Client(object):
                         game.gameObjects.remove(findByName("pokemon"+str(i.strings[0])))
                     except:
                         print("")
-                    game.gameObjects.append(GameObject("pokemon"+str(i.strings[0]),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
-                    findByName("pokemon"+str(i.strings[0]).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite"))
+                    if game.gameState=="inRoom":
+                        game.gameObjects.append(GameObject("pokemon"+str(i.strings[0]),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
+                        findByName("pokemon"+str(i.strings[0]).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite"))
             game.allPlayers = newAllPlayers
 
 
