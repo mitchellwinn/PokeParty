@@ -106,7 +106,7 @@ async def gameMain():
 			inputs[11] = False
 			asyncio.create_task(volumeMod(-1))
 		if playerInputs[8]==True:
-			inputs[0] = False
+			inputs[8] = False
 			fullscreen()
 
 		#game is computed at 60fps

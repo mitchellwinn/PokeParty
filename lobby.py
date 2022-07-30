@@ -171,9 +171,10 @@ async def inRoom():
 			game.inputs[3] = False
 			game.inputs = game.inputsFalse
 			thisClient = game.playerObject.getNamedComponent("client")
-			thisClient.starter+=-1
-			if(thisClient.starter<0):
-				thisClient.starter=5
+			starter+=-1
+			if(starter<0):
+				starter=5
+			thisClient.starter=game.starterList[starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(game.starterList[thisClient.starter])+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
@@ -181,8 +182,9 @@ async def inRoom():
 			game.inputs[4] = False
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.starter+=1
-			if(thisClient.starter>5):
-				thisClient.starter=0
+			if(starter>5):
+				starter=0
+			thisClient.starter=game.starterList[starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(game.starterList[thisClient.starter])+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
