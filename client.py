@@ -6,7 +6,7 @@ import game
 import os
 import time
 from threading import Thread
-from gameobject import GameObject
+from gameobject import GameObject, findByName
 from sprite import Sprite
 
 
@@ -69,7 +69,7 @@ class Client(object):
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
-                    game.gameObjects.append(GameObject("pokemon"+str(self.id),[game.windowDimensions[0]*.195+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.8]))
+                    game.gameObjects.append(GameObject("pokemon"+str(self.id),[game.windowDimensions[0]*.255,game.windowDimensions[1]*0.855]))
                     findByName("pokemon"+str(self.id)).addComponent(Sprite(str(thisPlayer.getNamedComponent("client").starter)+".png","pokemon\\","png"),"sprite")
             game.allPlayers = newAllPlayers
 
