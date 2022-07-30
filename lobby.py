@@ -76,7 +76,8 @@ def connectRoom(room):
 		game.playerObject.removeComponent("client")
 		game.playerObject.addComponent(Client(room),"client")
 	game.playerObject.getNamedComponent("client").trainer = random.randint(1,game.TRAINERS)
-	game.playerObject.getNamedComponent("client").starter = game.starterList[random.randint(0,5)]
+	game.playerObject.getNamedComponent("client").starter = random.randint(0,5)
+	game.playerObject.getNamedComponent("client").idstarter = game.starterList[game.playerObject.getNamedComponent("client").starter]
 	game.playerObject.getNamedComponent("client").connect()
 	if game.playerObject.getNamedComponent("client").connected=="FAILURE":
 		game.playerObject.removeComponent("client")
@@ -171,10 +172,10 @@ async def inRoom():
 			game.inputs[3] = False
 			game.inputs = game.inputsFalse
 			thisClient = game.playerObject.getNamedComponent("client")
-			starter+=-1
-			if(starter<0):
-				starter=5
-			thisClient.starter=game.starterList[starter]
+			thisClient.starter+=-1
+			if(thisClient.starter<0):
+				thisClient.starter=5
+			thisClient.starter=game.starterList[thisClient.starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(game.starterList[thisClient.starter])+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
@@ -182,9 +183,9 @@ async def inRoom():
 			game.inputs[4] = False
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.starter+=1
-			if(starter>5):
-				starter=0
-			thisClient.starter=game.starterList[starter]
+			if(thisClient.starter>5):
+				thisClient.starter=0
+			thisClient.idstarter=game.starterList[thisClient.starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(game.starterList[thisClient.starter])+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
