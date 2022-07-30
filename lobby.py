@@ -69,7 +69,8 @@ def connectRoom(room):
 	else:
 		game.playerObject.removeComponent("client")
 		game.playerObject.addComponent(Client(room),"client")
-	game.playerObject.getNamedComponent("client").trainer = random.randint(1,34)
+	game.playerObject.getNamedComponent("client").trainer = random.randint(1,35)
+	game.playerObject.getNamedComponent("client").starter = game.starterList[random.randint(0,5)]
 	game.playerObject.getNamedComponent("client").connect()
 	if game.playerObject.getNamedComponent("client").connected=="FAILURE":
 		game.playerObject.removeComponent("client")
