@@ -75,7 +75,7 @@ class Client(object):
                     except:
                         print("")
                     game.gameObjects.append(GameObject("pokemon"+str(i.strings[0]),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
-                    findByName("pokemon"+i.strings[0]).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite")
+                    findByName("pokemon"+str(i.strings[0]).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite")
             game.allPlayers = newAllPlayers
 
 
