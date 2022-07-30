@@ -66,6 +66,7 @@ class Client(object):
                         thisPlayer.addComponent(Sprite(str(thisPlayer.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
                     newAllPlayers.append(thisPlayer)
                     count+=1
+                count =1
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
