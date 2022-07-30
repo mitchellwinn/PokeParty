@@ -87,6 +87,7 @@ class Client(object):
                     if game.gameState=="inRoom":
                         game.gameObjects.append(GameObject("pokemon"+str(i.strings[0]),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
                         findByName("pokemon"+str(i.strings[0])).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite")
+                    count+=1
             game.allPlayers = newAllPlayers
             self.updating = False
 

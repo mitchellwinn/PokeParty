@@ -101,9 +101,10 @@ def clientMsgInterpret(conn, addr, msg):
 	#-----updates server's knowledge of a specific player in a room
 	elif msg.purpose=="UPDATE":
 		for i in rooms:
-			if i.name == msg.room:
-				for k in i.players:
-					print("")					
+			for k in i.players:
+				if k.id == msg.strings[0]:
+					k.trainer = msg.strings[1]
+					k.starter = msg.strings[2]		
 	#-----
 	#-----updates clients knowledge of all players in a room
 	elif msg.purpose=="GETUPDATES":

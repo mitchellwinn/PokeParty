@@ -69,7 +69,7 @@ def connectRoom(room):
 	else:
 		game.playerObject.removeComponent("client")
 		game.playerObject.addComponent(Client(room),"client")
-	game.playerObject.getNamedComponent("client").trainer = random.randint(1,36)
+	game.playerObject.getNamedComponent("client").trainer = random.randint(1,game.TRAINERS)
 	game.playerObject.getNamedComponent("client").starter = game.starterList[random.randint(0,5)]
 	game.playerObject.getNamedComponent("client").connect()
 	if game.playerObject.getNamedComponent("client").connected=="FAILURE":
@@ -138,6 +138,15 @@ async def inRoom():
 			game.gameObjects.clear()
 			game.allPlayers.clear()
 			inputDone = True
+			return
+		elif game.playerInputs[1]==True:
+			thisClient = game.playerObject.getNamedComponent("client")
+			thisClient.trainer+=1
+			if(thisClient.trainer>game.TRAINERS)
+				thisClient.trainer=1
+			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
+			#playSound("SFX_PRESS_AB.wav")
 			return
 		if ready==False:
 			findByName("titleText2").getNamedComponent("text").text = "Press 'R' to READY"

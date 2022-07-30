@@ -23,7 +23,7 @@ async def titleGo():
 	#playSound("SFX_INTRO_CRASH.wav")
 	game.gameObjects.append(GameObject("titlePokemon",[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]))
 	game.gameObjects.append(GameObject("titleTrainer",[game.windowDimensions[0]*.165,game.windowDimensions[1]*.775]))
-	findByName("titleTrainer").addComponent(Sprite(str(random.randint(1,36))+".png","trainers\\"),"sprite")
+	findByName("titleTrainer").addComponent(Sprite(str(random.randint(1,game.TRAINERS))+".png","trainers\\"),"sprite")
 	asyncio.create_task(cyclePokemon())
 	game.gameObjects.append(GameObject("title",[game.windowDimensions[0]/2,0]))
 	findByName("title").addComponent(Sprite("title1black.png","title\\"),"sprite")
@@ -91,7 +91,7 @@ async def cyclePokemon():
 			findByName("titlePokemon").transform.position=[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]
 		except:
 			return
-		findByName("titleTrainer").getNamedComponent("sprite").fileChange(str(random.randint(1,36))+".png")
+		findByName("titleTrainer").getNamedComponent("sprite").fileChange(str(random.randint(1,game.TRAINERS))+".png")
 		findByName("titlePokemon").getNamedComponent("sprite").fileChange(str(random.randint(1,251))+".gif")
 		#findByName("titlePokemon").getNamedComponent("sprite").gifInit()
 	findByName("title").destroy()
