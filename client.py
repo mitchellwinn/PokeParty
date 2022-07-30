@@ -44,12 +44,12 @@ class Client(object):
         elif msg.purpose == "GETUPDATES":
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
             newAllPlayers=[]
-            if game.gameState=="inRoom" or game.gameState=="conncetingToRoom" :
+            if game.gameState=="inRoom" or game.gameState=="connectingToRoom" :
                 count=1
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
-                    thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.1675,game.windowDimensions[1]*0.775])
+                    thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.775])
                     thisPlayer.addComponent(Client(self.room),"client")
                     thisPlayer.getNamedComponent("client").id = i.strings[0]
                     thisPlayer.getNamedComponent("client").name = i.strings[1]
