@@ -46,12 +46,13 @@ class Client(object):
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
             newAllPlayers=[]
             if True:
+                self.updating = True
                 count=1
                 for p in game.allPlayers:
-                    delete = False
+                    delete = True
                     for i in msg.strings:
                         if p.getNamedComponent("client").id == i.strings[0]:
-                            delete = True
+                            delete = False
                     if(delete):
                         game.gameObjects.remove(findByName("label"+str(p.getNamedComponent("client").id)))
                         game.gameObjects.remove(findByName("pokemon"+str(p.getNamedComponent("client").id)))
@@ -87,6 +88,7 @@ class Client(object):
                         game.gameObjects.append(GameObject("pokemon"+str(i.strings[0]),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
                         findByName("pokemon"+str(i.strings[0])).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite")
             game.allPlayers = newAllPlayers
+            self.updating = False
 
 
 

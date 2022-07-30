@@ -176,6 +176,11 @@ def sortDisplay(e):
 	return e.transform.sortOrder()
 
 def updateDisplay():
+	try:
+		if playerObject.getNamedComponent("client").updating==True:
+			return
+	except:
+		True
 	global screen, scale, full,w ,h, frame, border
 	w, h = screen.get_size()
 	screen.fill([255,255,255])
