@@ -69,7 +69,7 @@ def connectRoom(room):
 	else:
 		game.playerObject.removeComponent("client")
 		game.playerObject.addComponent(Client(room),"client")
-	game.playerObject.getNamedComponent("client").trainer = random.randint(1,35)
+	game.playerObject.getNamedComponent("client").trainer = random.randint(1,36)
 	game.playerObject.getNamedComponent("client").starter = game.starterList[random.randint(0,5)]
 	game.playerObject.getNamedComponent("client").connect()
 	if game.playerObject.getNamedComponent("client").connected=="FAILURE":
@@ -122,6 +122,10 @@ async def inRoom():
 	findByName("titleText3").addComponent(Text("Not all players are READY","pokemon1.ttf"),"text")
 	game.playerObject.transform.position = [game.windowDimensions[0]*.165,game.windowDimensions[1]*0.765]
 	game.playerObject.addComponent(Sprite(str(game.playerObject.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
+	game.gameObjects.append(GameObject("label"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.165,game.windowDimensions[1]*.5]))
+	findByName("label"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Text(str(game.playerObject.getNamedComponent("client").name),"pokemon1.ttf"),"text")
+	game.gameObjects.append(GameObject("pokemon"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.255,game.windowDimensions[1]*0.855]))
+	findByName("pokemon"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite(str(game.playerObject.getNamedComponent("client").starter)+".png","pokemon\\","png"),"sprite")
 	i=0
 	while inputDone==False:
 		if game.playerInputs[9]==True:

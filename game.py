@@ -176,13 +176,13 @@ def updateDisplay():
 	global screen, scale, full,w ,h, frame, border
 	w, h = screen.get_size()
 	screen.fill([255,255,255])
+	if playerObject.getNamedComponent("sprite")!=-1:
+			drawSprites(playerObject.getNamedComponent("sprite"),playerObject)
 	for gobj in (gameObjects+allPlayers):
 		if gobj.getNamedComponent("sprite")!=-1:
 			drawSprites(gobj.getNamedComponent("sprite"),gobj)
 		if gobj.getNamedComponent("text")!=-1:
 			drawText(gobj.getNamedComponent("text"),gobj)
-	if playerObject.getNamedComponent("sprite")!=-1:
-			drawSprites(playerObject.getNamedComponent("sprite"),playerObject)
 	if full:
 		screen.blit(border,border.get_rect(center=((w/2),(h/2))))	
 	pg.display.update()

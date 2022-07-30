@@ -44,20 +44,33 @@ class Client(object):
         elif msg.purpose == "GETUPDATES":
             #we don't need to do anything with an update about ourselves, as thats information we originally gave out, and this is client authoritative since its a boardgame
             newAllPlayers=[]
+            try:
+                game.gameObjects.remove(findByName("label"+str(self.id)))
+                game.gameObjects.remove(findByName("pokemon"+str(self.id)))
+            except:
+                print("")
             if True:
                 count=1
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
+                    game.gameObjects.append(GameObject("label"+str(self.id),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.5]))
+                    findByName("label"+str(self.id)).addComponent(Text(self.name,"pokemon1.ttf"),"text")
                     thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.775])
                     thisPlayer.addComponent(Client(self.room),"client")
                     thisPlayer.getNamedComponent("client").id = i.strings[0]
                     thisPlayer.getNamedComponent("client").name = i.strings[1]
                     thisPlayer.getNamedComponent("client").trainer = i.strings[2]
+                    thisPlayer.getNamedComponent("client").starter = i.strings[3]
                     if game.gameState=="inRoom":
                         thisPlayer.addComponent(Sprite(str(thisPlayer.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
                     newAllPlayers.append(thisPlayer)
                     count+=1
+                for i in msg.strings:
+                    if i.strings[0] == self.id:
+                        continue
+                    game.gameObjects.append(GameObject("pokemon"+str(self.id),[game.windowDimensions[0]*.195+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.8]))
+                    findByName("pokemon"+str(self.id)).addComponent(Sprite(str(thisPlayer.getNamedComponent("client").starter)+".png","pokemon\\","png"),"sprite")
             game.allPlayers = newAllPlayers
 
 
@@ -86,7 +99,7 @@ class Client(object):
 
     def __init__(self, room):
         self.connected = "UNDECIDED"
-        self.name = print(os.getlogin( )[0:os.getlogin( ).find(" ")])
+        self.name = os.getlogin( )[0:os.getlogin( ).find(" ")]
         self.header = 4096
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = '173.255.244.44'
@@ -128,7 +141,7 @@ class Client(object):
         print(f"Got response from server!")
         reply = pickle.loads(reply)
         self.id = reply.strings[0]
-        toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name,self.trainer])
+        toSend = SimpleData("ROOM",[self.desiredRoom,self.id,self.name,self.trainer,self.starter])
         self.send (toSend.getAsDataString(),True)
         toSend = SimpleData("GETUPDATES",[self.room])
         self.send (toSend.getAsDataString(),True)
