@@ -73,7 +73,7 @@ class Client(object):
                         game.gameObjects.remove(findByName("pokemon"+str(self.id)))
                     except:
                         print("")
-                    game.gameObjects.append(GameObject("pokemon"+str(self.id),[game.windowDimensions[0]*.165+game.windowDimensions[0]*.255,game.windowDimensions[1]*0.855]))
+                    game.gameObjects.append(GameObject("pokemon"+str(self.id),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
                     findByName("pokemon"+str(self.id)).addComponent(Sprite(str(thisPlayer.getNamedComponent("client").starter)+".png","pokemon\\","png"),"sprite")
             game.allPlayers = newAllPlayers
 
