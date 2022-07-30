@@ -142,7 +142,7 @@ async def inRoom():
 		elif game.playerInputs[1]==True:
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.trainer+=1
-			if(thisClient.trainer>game.TRAINERS)
+			if(thisClient.trainer>game.TRAINERS):
 				thisClient.trainer=1
 			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
