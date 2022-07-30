@@ -54,7 +54,8 @@ class Client(object):
                     thisPlayer.getNamedComponent("client").id = i.strings[0]
                     thisPlayer.getNamedComponent("client").name = i.strings[1]
                     thisPlayer.getNamedComponent("client").trainer = i.strings[2]
-                    thisPlayer.addComponent(Sprite(str(thisPlayer.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
+                    if game.gameState=="inRoom":
+                        thisPlayer.addComponent(Sprite(str(thisPlayer.getNamedComponent("client").trainer)+".png","trainers\\","png"),"sprite")
                     newAllPlayers.append(thisPlayer)
                     count+=1
             game.allPlayers = newAllPlayers

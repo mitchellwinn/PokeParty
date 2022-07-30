@@ -100,7 +100,6 @@ def connectRoom(room):
 	findByName("titleText3").getNamedComponent("text").text = f"{len(game.allPlayers)+1} players so far."
 	playSound("SFX_HEAL_AILMENT.wav")
 	time.sleep(2.5)
-	game.gameState = "inRoom"
 	roomName = game.playerObject.getNamedComponent("client").room
 	asyncio.run(inRoom())
 
@@ -110,6 +109,7 @@ async def inRoom():
 	ready = False
 	inputDone = False
 	time.sleep(.25)
+	game.gameState = "inRoom"
 	playMusic("052 National Park.mp3")
 	game.gameObjects.append(GameObject("room",[game.windowDimensions[0]*.05,game.windowDimensions[1]*.1]))
 	findByName("room").addComponent(Text(f"ROOM[{roomName}]","pokemon1.ttf",16,"left"),"text")
