@@ -2,15 +2,20 @@ import pygame as pg
 import asyncio
 import ctypes
 import random
+import time
 from sprite import Sprite
+from threading import Thread
 from gameobject import findByName, GameObject
 from client import SimpleData
 from audio import stopMusic
 
 #all global variables to be used by game
 def __init__():
-	global TRAINERS, gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject, starterList, allPlayers, gameVolume, iconShow
+	global TRAINERS, inputsFalse, gameObjects, timestep, playerInputs, inputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject, starterList, allPlayers, gameVolume, iconShow
 	TRAINERS = 36
+	inputsFalse = [False,False,False,False,False,False,False,False,False,False,False,False,False,False]
+	inputs = inputsFalse
+	playerInputs = inputsFalse
 	iconShow = 0
 	myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
 	ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
@@ -28,54 +33,52 @@ def __init__():
 	border = pg.image.load("sprites\\frame.png")
 	border = pg.transform.scale(border, (border.get_rect().width*4, border.get_rect().height*4))
 #update playrInput global variable to be used throughout program
-def playerInputsGet():
-	global typeInput, typing, inputsFalse, inputs, gameState
-	typing = False
-	if gameState=="lobby":
-		typing = True
-	inputsFalse = [False,False,False,False,False,False,False,False,False,False,False,False,False,False]
-	if typing == False:
-		typeInput = ""
-		inputs = inputsFalse
-	events = pg.event.get()
-	for event in events:
-		if event.type == pg.KEYDOWN:
-			typeInput = event.unicode
-			if event.key == pg.K_ESCAPE:
-				print("Pressed ESC")
-				inputs[0] = True
-			elif event.key == pg.K_UP:
-				inputs[1] = True
-			elif event.key == pg.K_DOWN:
-				inputs[2] = True
-			elif event.key == pg.K_LEFT:
-				inputs[3] = True
-			elif event.key == pg.K_RIGHT:
-				inputs[4] = True
-			elif event.key == pg.K_RIGHTBRACKET:
-				inputs[5] = True
-			elif event.key == pg.K_LEFTBRACKET:
-				inputs[6] = True
-			elif event.key == pg.K_z:
-				inputs[7] = True
-			elif event.key == pg.K_F11:
-				inputs[8] = True
-			elif event.key == pg.K_BACKQUOTE:
-				inputs[9] = True
-			elif event.key == pg.K_PAGEUP:
-				inputs[10] = True
-			elif event.key == pg.K_PAGEDOWN:
-				inputs[11] = True
-			elif event.key == pg.K_RETURN:
-				inputs[12] = True
-			elif event.key == pg.K_BACKSPACE:
-				inputs[13] = True
-	return inputs
+
+async def playerInputsGet():
+	global typeInput, typing, inputsFalse, inputs, gameState, playerInputs, timestep, programLive
+	print("called playerInputsGet()")
+	while programLive:
+		#print("playerInputsGet() loop")
+		events = pg.event.get()
+		for event in events:
+			if event.type == pg.KEYDOWN:
+				typeInput = event.unicode
+				if event.key == pg.K_ESCAPE:
+					print("Pressed ESC")
+					inputs[0] = True
+				elif event.key == pg.K_UP:
+					inputs[1] = True
+				elif event.key == pg.K_DOWN:
+					inputs[2] = True
+				elif event.key == pg.K_LEFT:
+					inputs[3] = True
+				elif event.key == pg.K_RIGHT:
+					inputs[4] = True
+				elif event.key == pg.K_RIGHTBRACKET:
+					inputs[5] = True
+				elif event.key == pg.K_LEFTBRACKET:
+					inputs[6] = True
+				elif event.key == pg.K_z:
+					inputs[7] = True
+				elif event.key == pg.K_F11:
+					inputs[8] = True
+				elif event.key == pg.K_BACKQUOTE:
+					inputs[9] = True
+				elif event.key == pg.K_PAGEUP:
+					inputs[10] = True
+				elif event.key == pg.K_PAGEDOWN:
+					inputs[11] = True
+				elif event.key == pg.K_RETURN:
+					inputs[12] = True
+				elif event.key == pg.K_BACKSPACE:
+					inputs[13] = True
+		playerInputs = inputs
+		await asyncio.sleep(timestep)
 
 #main operations of pygame
 async def gameMain():
 	#gameMain is called once
-	global gameObjects, timestep, playerInputs, programLive, windowDimensions, screen, scale, gameState, frame
+	global gameObjects, timestep, playerInputs, programLive, windowDimensions, screen, scale, gameState, frame 
 	#pygame window is initialized with base dimensions
 	pg.init()
 	img = pg.image.load('sprites\\windowIcon.png')
@@ -84,19 +87,26 @@ async def gameMain():
 	screen = pg.display.set_mode(size=(windowDimensions[0]*scale, windowDimensions[1]*scale), flags=0, depth=0, display=0, vsync=0)
 	gameState = "title"
 	#as long as we are still running the program it is live
+	asyncio.create_task(playerInputsGet())
 	while programLive:
-		playerInputs = playerInputsGet()
+		#playerInputs = playerInputsGet()
 		if playerInputs[0]==True:
+			inputs[0] = False
 			programLive = False
 		if playerInputs[5]==True:
+			inputs[5] = False
 			zoom(1)
 		elif playerInputs[6]==True:
+			inputs[6] = False
 			zoom(-1)
 		if playerInputs[10]==True:
+			inputs[10] = False
 			asyncio.create_task(volumeMod(1))
 		elif playerInputs[11]==True:
+			inputs[11] = False
 			asyncio.create_task(volumeMod(-1))
 		if playerInputs[8]==True:
+			inputs[0] = False
 			fullscreen()
 
 		#game is computed at 60fps

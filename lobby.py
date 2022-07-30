@@ -2,6 +2,7 @@ import game
 import time
 import random
 import asyncio
+from threading import Thread
 from gameobject import GameObject, findByName
 from sprite import Sprite
 from text import Text
@@ -32,14 +33,17 @@ def join():
 	game.typeInput = ""
 	while inputDone==False:
 		if game.playerInputs[9] == True:
+			game.inputs[9] = False
 			stopMusic()
 			playSound("SFX_PRESS_AB.wav")
 			game.gameObjects.clear()
 			return
 		elif game.playerInputs[0] == True:
+			game.inputs[0] = False
 			game.programLive = False
 			return
 		elif game.playerInputs[12] == True and len(user_text)>0:
+			game.inputs[12] = False
 			stopMusic()
 			playSound("SFX_PRESS_AB.wav")
 			inputDone=True
@@ -48,9 +52,11 @@ def join():
 			game.gameState = "connectingToRoom"
 			return
 		elif game.playerInputs[13] == True:
+			game.inputs[13] = False
 			user_text = user_text[0:-1]
-		else:
+		elif game.typeInput != "":
 			user_text += game.typeInput
+			game.typeInput=""
 		findByName("titleText2").getNamedComponent("text").text = user_text+blinker
 		if game.frame%60>=30:
 			blinker = ""
@@ -127,8 +133,10 @@ async def inRoom():
 	game.gameObjects.append(GameObject("pokemon"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.255,game.windowDimensions[1]*0.855]))
 	findByName("pokemon"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite(str(game.playerObject.getNamedComponent("client").starter)+".png","pokemon\\","png"),"sprite")
 	i=0
+	game.typing = True
 	while inputDone==False:
 		if game.playerInputs[9]==True:
+			game.inputs[9] = False
 			stopMusic()
 			game.playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[game.playerObject.getNamedComponent("client").id]).getAsDataString(),False)
 			game.playerObject.removeComponent("client")
@@ -140,6 +148,8 @@ async def inRoom():
 			inputDone = True
 			return
 		elif game.playerInputs[1]==True:
+			game.inputs[1] = False
+			game.inputs = game.inputsFalse
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.trainer+=1
 			if(thisClient.trainer>game.TRAINERS):
@@ -147,7 +157,35 @@ async def inRoom():
 			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
-			return
+		elif game.playerInputs[2]==True:
+			game.inputs[2] = False
+			game.inputs = game.inputsFalse
+			thisClient = game.playerObject.getNamedComponent("client")
+			thisClient.trainer+=-1
+			if(thisClient.trainer<1):
+				thisClient.trainer=game.TRAINERS
+			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
+			#playSound("SFX_PRESS_AB.wav")
+		elif game.playerInputs[3]==True:
+			game.inputs[3] = False
+			game.inputs = game.inputsFalse
+			thisClient = game.playerObject.getNamedComponent("client")
+			thisClient.starter+=-1
+			if(thisClient.starter<0):
+				thisClient.starter=5
+			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(game.starterList[thisClient.starter])+".png")
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
+			#playSound("SFX_PRESS_AB.wav")
+		elif game.playerInputs[4]==True:
+			game.inputs[4] = False
+			thisClient = game.playerObject.getNamedComponent("client")
+			thisClient.starter+=1
+			if(thisClient.starter>5):
+				thisClient.starter=0
+			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(game.starterList[thisClient.starter])+".png")
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
+			#playSound("SFX_PRESS_AB.wav")
 		if ready==False:
 			findByName("titleText2").getNamedComponent("text").text = "Press 'R' to READY"
 		else:
