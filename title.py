@@ -44,17 +44,17 @@ async def titleMenu():
 	choice = 0
 	while game.gameState == "title":
 		if(game.playerInputs[1]==True):
-			game.inputs[1] = False
+			#game.inputs = game.inputsFalse
 			choice-=1
 		elif(game.playerInputs[2]==True):
-			game.inputs[2] = False
+			#game.inputs = game.inputsFalse
 			choice+=1
 		if choice>1:
 			choice = 1
 		if choice<0:
 			choice = 0
 		if game.playerInputs[7]==True:
-			game.inputs[7] = False
+			#game.inputs = game.inputsFalse
 			playSound("SFX_PRESS_AB.wav")
 			game.gameObjects.clear()
 			if choice==0:

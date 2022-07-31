@@ -66,7 +66,7 @@ class Client(object):
                     thisPlayer.getNamedComponent("client").name = i.strings[1]
                     thisPlayer.getNamedComponent("client").trainer = i.strings[2]
                     thisPlayer.getNamedComponent("client").starter = i.strings[3]
-                    thisPlayer.getNamedComponent("client").starterList[i.strings[3]]
+                    thisPlayer.getNamedComponent("client").idstarter = game.starterList[i.strings[3]]
                     if game.gameState=="inRoom":
                         thisPlayer.addComponent(Sprite(str(i.strings[2])+".png","trainers\\","png"),"sprite")
                         try:

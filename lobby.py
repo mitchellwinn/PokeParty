@@ -33,17 +33,17 @@ def join():
 	game.typeInput = ""
 	while inputDone==False:
 		if game.playerInputs[9] == True:
-			game.inputs[9] = False
+			#game.inputs = game.inputsFalse
 			stopMusic()
 			playSound("SFX_PRESS_AB.wav")
 			game.gameObjects.clear()
 			return
 		elif game.playerInputs[0] == True:
-			game.inputs[0] = False
+			#game.inputs = game.inputsFalse
 			game.programLive = False
 			return
 		elif game.playerInputs[12] == True and len(user_text)>0:
-			game.inputs[12] = False
+			#game.inputs = game.inputsFalse
 			stopMusic()
 			playSound("SFX_PRESS_AB.wav")
 			inputDone=True
@@ -52,7 +52,7 @@ def join():
 			game.gameState = "connectingToRoom"
 			return
 		elif game.playerInputs[13] == True:
-			game.inputs[13] = False
+			#game.inputs = game.inputsFalse
 			user_text = user_text[0:-1]
 		elif game.typeInput != "":
 			user_text += game.typeInput
@@ -62,7 +62,7 @@ def join():
 			blinker = ""
 		elif game.frame%60>=0:
 			blinker = "l"
-		game.inputs = game.inputsFalse
+		#game.inputs = game.inputsFalse
 		game.typeInput = ""
 		time.sleep(game.timestep)
 
@@ -112,7 +112,7 @@ def connectRoom(room):
 	asyncio.run(inRoom())
 
 async def inRoom():
-	global roomName,ready
+	global roomName, ready
 	game.gameObjects.clear()
 	ready = False
 	inputDone = False
@@ -134,10 +134,9 @@ async def inRoom():
 	game.gameObjects.append(GameObject("pokemon"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.255,game.windowDimensions[1]*0.855]))
 	findByName("pokemon"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite(str(game.playerObject.getNamedComponent("client").idstarter)+".png","pokemon\\","png"),"sprite")
 	i=0
-	game.typing = True
 	while inputDone==False:
 		if game.playerInputs[9]==True:
-			game.inputs[9] = False
+			await asyncio.sleep(.1)
 			stopMusic()
 			game.playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[game.playerObject.getNamedComponent("client").id]).getAsDataString(),False)
 			game.playerObject.removeComponent("client")
@@ -149,8 +148,7 @@ async def inRoom():
 			inputDone = True
 			return
 		elif game.playerInputs[1]==True:
-			game.inputs[1] = False
-			game.inputs = game.inputsFalse
+			await asyncio.sleep(.1)
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.trainer+=1
 			if(thisClient.trainer>game.TRAINERS):
@@ -159,8 +157,7 @@ async def inRoom():
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		elif game.playerInputs[2]==True:
-			game.inputs[2] = False
-			game.inputs = game.inputsFalse
+			await asyncio.sleep(.1)
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.trainer+=-1
 			if(thisClient.trainer<1):
@@ -169,8 +166,7 @@ async def inRoom():
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		elif game.playerInputs[3]==True:
-			game.inputs[3] = False
-			game.inputs = game.inputsFalse
+			await asyncio.sleep(.1)
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.starter+=-1
 			if(thisClient.starter<0):
@@ -180,7 +176,7 @@ async def inRoom():
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		elif game.playerInputs[4]==True:
-			game.inputs[4] = False
+			await asyncio.sleep(.1)
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.starter+=1
 			if(thisClient.starter>5):
@@ -193,7 +189,7 @@ async def inRoom():
 			findByName("titleText2").getNamedComponent("text").text = "Press 'R' to READY"
 		else:
 			findByName("titleText2").getNamedComponent("text").text = "READY!"
-		time.sleep(game.timestep)
+		
 		i+=1
 		if i>60:
 			i=0
@@ -203,3 +199,4 @@ async def inRoom():
 			findByName("titleText").getNamedComponent("text").text = "Waiting for players.."
 		elif i>=0:
 			findByName("titleText").getNamedComponent("text").text = "Waiting for players."
+		await asyncio.sleep(game.timestep)
