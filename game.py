@@ -42,8 +42,8 @@ async def playerInputsGet():
 		except:
 			True
 		if num%3 == 0:
-			print("setFalse")
-			playerInputs = [False,False,False,False,False,False,False,False,False,False,False,False,False,False]
+			#print("setFalse")
+			playerInputs = [False,False,False,False,False,False,False,False,False,False,False,False,False,False,False]
 		events = pg.event.get()
 		for event in events:
 			if event.type == pg.KEYDOWN:
@@ -86,7 +86,9 @@ async def playerInputsGet():
 				elif event.key == pg.K_BACKSPACE:
 					typeInput = ""
 					playerInputs[13] = True
-		print(str(playerInputs))
+				elif event.key == pg.K_r:
+					playerInputs[14] = True
+		#print(str(playerInputs))
 		num+=1
 		await asyncio.sleep(timestep)
 
@@ -109,12 +111,16 @@ async def gameMain():
 			programLive = False
 		if playerInputs[5]==True:
 			zoom(1)
+			await asyncio.sleep(.035)
 		elif playerInputs[6]==True:
 			zoom(-1)
+			await asyncio.sleep(.035)
 		if playerInputs[10]==True:
 			asyncio.create_task(volumeMod(1))
+			await asyncio.sleep(.035)
 		elif playerInputs[11]==True:
 			asyncio.create_task(volumeMod(-1))
+			await asyncio.sleep(.035)
 		if playerInputs[8]==True:
 			fullscreen()
 
@@ -171,6 +177,7 @@ def zoom(amount):
 		screen = pg.display.set_mode(size=(windowDimensions[0]*scale, windowDimensions[1]*scale), flags=0, depth=0, display=0, vsync=0)
 	frame = 0
 	updateDisplay()
+
 
 def fullscreen():
 	global full, screen, scale, windowDimensions, frame

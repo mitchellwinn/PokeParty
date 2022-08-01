@@ -56,39 +56,46 @@ class Client(object):
                     if(delete):
                         game.gameObjects.remove(findByName("label"+str(p.getNamedComponent("client").id)))
                         game.gameObjects.remove(findByName("pokemon"+str(p.getNamedComponent("client").id)))
-
+                        game.allPlayers.remove(p)
                 for i in msg.strings:
                     if i.strings[0] == self.id:
                         continue
-                    thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.775])
-                    thisPlayer.addComponent(Client(self.room),"client")
-                    thisPlayer.getNamedComponent("client").id = i.strings[0]
+                    exists = False
+                    for p in game.allPlayers:
+                        if p.getNamedComponent("client").id == i.strings[0]:
+                            exists = True
+                    if(exists==False):
+                        thisPlayer = GameObject(str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.775])
+                        thisPlayer.addComponent(Client(self.room),"client")
+                        thisPlayer.getNamedComponent("client").id = i.strings[0]
+                    else:
+                        thisPlayer = findByName(str(i.strings[0]))
                     thisPlayer.getNamedComponent("client").name = i.strings[1]
                     thisPlayer.getNamedComponent("client").trainer = i.strings[2]
                     thisPlayer.getNamedComponent("client").starter = i.strings[3]
+                    thisPlayer.getNamedComponent("client").ready = i.strings[4]
                     thisPlayer.getNamedComponent("client").idstarter = game.starterList[i.strings[3]]
+                    #Update Room Trainer Pokemon and Label
                     if game.gameState=="inRoom":
-                        thisPlayer.addComponent(Sprite(str(i.strings[2])+".png","trainers\\","png"),"sprite")
                         try:
-                            game.gameObjects.remove(findByName("label"+str(i.strings[0])))
+                            thisPlayer.getNamedComponent("sprite").fileChange(str(thisPlayer.getNamedComponent("client").trainer)+".png")
                         except:
-                            print("")
-                        game.gameObjects.append(GameObject("label"+str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*(0.5+((count)%2)*.05)]))
-                        findByName("label"+str(i.strings[0])).addComponent(Text(i.strings[1],"pokemon1.ttf"),"text")
+                             thisPlayer.addComponent(Sprite(str(i.strings[2])+".png","trainers\\","png"),"sprite")
+                        try:
+                            findByName("label"+str(i.strings[0])).getNamedComponent("text").text = str(i.strings[1])
+                        except:
+                            game.gameObjects.append(GameObject("label"+str(i.strings[0]),[game.windowDimensions[0]*.165+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*(0.5+((count)%2)*.05)]))
+                            findByName("label"+str(i.strings[0])).addComponent(Text(i.strings[1],"pokemon1.ttf"),"text")
+                        try:
+                            findByName("pokemon"+str(i.strings[0])).getNamedComponent("sprite").fileChange(str(thisPlayer.getNamedComponent("client").starter)+".png")
+                        except:
+                            game.gameObjects.append(GameObject("pokemon"+str(i.strings[0]),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
+                            findByName("pokemon"+str(i.strings[0])).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite")
+                    count+=1
                     newAllPlayers.append(thisPlayer)
                     count+=1
                 count =1
-                for i in msg.strings:
-                    if i.strings[0] == self.id:
-                        continue
-                    try:
-                        game.gameObjects.remove(findByName("pokemon"+str(i.strings[0])))
-                    except:
-                        print("")
-                    if game.gameState=="inRoom":
-                        game.gameObjects.append(GameObject("pokemon"+str(i.strings[0]),[game.windowDimensions[0]*.255+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*0.855]))
-                        findByName("pokemon"+str(i.strings[0])).addComponent(Sprite(str(i.strings[3])+".png","pokemon\\","png"),"sprite")
-                    count+=1
+                    
             game.allPlayers = newAllPlayers
             self.updating = False
 
@@ -118,6 +125,7 @@ class Client(object):
 
     def __init__(self, room):
         self.connected = "UNDECIDED"
+        self.ready=False
         self.name = os.getlogin( )[0:os.getlogin( ).find(" ")]
         self.header = 4096
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

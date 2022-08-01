@@ -3,6 +3,7 @@
 #------------------------------
 import game
 from gameobject import GameObject, findByName
+#from boardgamelogic import boardgameMain
 import asyncio
 from title import titleGo, titleMenu
 
@@ -21,6 +22,8 @@ async def taskMain():
 			game.frame = 0
 			await titleGo()
 			await titleMenu()
+			#await boardgameMain()
+
 		await asyncio.sleep(0)
 	quit()
 

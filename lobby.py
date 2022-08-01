@@ -133,6 +133,10 @@ async def inRoom():
 	findByName("label"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Text(str(game.playerObject.getNamedComponent("client").name),"pokemon1.ttf"),"text")
 	game.gameObjects.append(GameObject("pokemon"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.255,game.windowDimensions[1]*0.855]))
 	findByName("pokemon"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite(str(game.playerObject.getNamedComponent("client").idstarter)+".png","pokemon\\","png"),"sprite")
+	game.gameObjects.append(GameObject("ready"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.125,game.windowDimensions[1]*0.925]))
+	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite("waiting.gif","","gif"),"sprite")
+	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).getNamedComponent("sprite").looping=True
+	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).getNamedComponent("sprite").playing=True
 	i=0
 	while inputDone==False:
 		if game.playerInputs[9]==True:
@@ -147,43 +151,55 @@ async def inRoom():
 			game.allPlayers.clear()
 			inputDone = True
 			return
+		elif game.playerInputs[14]==True:
+			await asyncio.sleep(.035)
+			thisClient = game.playerObject.getNamedComponent("client")
+			if thisClient.ready:
+				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("waiting.gif")
+				thisClient.ready = False
+			else:
+				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("ready.gif")
+				thisClient.ready = True
+			
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
+			#playSound("SFX_PRESS_AB.wav")
 		elif game.playerInputs[1]==True:
-			await asyncio.sleep(.1)
+			await asyncio.sleep(.035)
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.trainer+=1
 			if(thisClient.trainer>game.TRAINERS):
 				thisClient.trainer=1
 			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
-			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		elif game.playerInputs[2]==True:
-			await asyncio.sleep(.1)
+			await asyncio.sleep(.035)
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.trainer+=-1
 			if(thisClient.trainer<1):
 				thisClient.trainer=game.TRAINERS
 			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
-			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		elif game.playerInputs[3]==True:
-			await asyncio.sleep(.1)
+			await asyncio.sleep(.035)
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.starter+=-1
 			if(thisClient.starter<0):
 				thisClient.starter=5
 			thisClient.idstarter=game.starterList[thisClient.starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(thisClient.idstarter)+".png")
-			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		elif game.playerInputs[4]==True:
-			await asyncio.sleep(.1)
+			await asyncio.sleep(.035)
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.starter+=1
 			if(thisClient.starter>5):
 				thisClient.starter=0
 			thisClient.idstarter=game.starterList[thisClient.starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(thisClient.idstarter)+".png")
-			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter]).getAsDataString(),False)
+			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
 			#playSound("SFX_PRESS_AB.wav")
 		if ready==False:
 			findByName("titleText2").getNamedComponent("text").text = "Press 'R' to READY"

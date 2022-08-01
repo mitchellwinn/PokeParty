@@ -31,11 +31,15 @@ class Sprite(object):
 			return
 		self.frame+=1
 		if self.frame>=len(self.frames):
-			self.playing = False
-			self.frame = len(self.frames)-1
+			if self.looping == False:
+					self.playing = False
+					self.frame = len(self.frames)-1
+			else:
+				self.frame = 0
 		self.img = self.frames[self.frame]
 
 	def __init__(self,*args):
+		self.looping = False
 		self.anchor = "center"
 		self.filePath = "sprites\\"+args[1]
 		#self.img = pg.image.load(self.filePath+self.file)
