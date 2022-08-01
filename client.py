@@ -89,7 +89,7 @@ class Client(object):
                                 findByName("ready"+str(i.strings[0])).getNamedComponent("waiting").fileChange("ready.gif")
                             findByName("ready"+str(i.strings[0])).getNamedComponent("ready").playing =True
                         except:
-                            findByName("ready"+str(i.strings[0])).addComponent("waiting.gif","","gif"),"sprite")
+                            findByName("ready"+str(i.strings[0])).addComponent("waiting.gif","gif"),"sprite")
                         try:
                             findByName("label"+str(i.strings[0])).getNamedComponent("text").text = str(i.strings[1])
                         except:
