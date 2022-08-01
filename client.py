@@ -89,6 +89,7 @@ class Client(object):
                                 findByName("ready"+str(i.strings[0])).getNamedComponent("waiting").fileChange("ready.gif")
                             findByName("ready"+str(i.strings[0])).getNamedComponent("ready").playing =True
                         except:
+                            game.gameObjects.append(GameObject("ready"+str(i.strings[0]),[game.windowDimensions[0]*.21+game.windowDimensions[0]*count*.2,game.windowDimensions[1]*(0.895-((count)%2)*.05)]))
                             findByName("ready"+str(i.strings[0])).addComponent(Sprite("waiting.gif","","gif"),"sprite")
                         try:
                             findByName("label"+str(i.strings[0])).getNamedComponent("text").text = str(i.strings[1])
