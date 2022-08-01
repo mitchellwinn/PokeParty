@@ -56,6 +56,7 @@ class Client(object):
                     if(delete):
                         game.gameObjects.remove(findByName("label"+str(p.getNamedComponent("client").id)))
                         game.gameObjects.remove(findByName("pokemon"+str(p.getNamedComponent("client").id)))
+                        game.gameObjects.remove(findByName("ready"+str(p.getNamedComponent("client").id)))
                         game.allPlayers.remove(p)
                 for i in msg.strings:
                     if i.strings[0] == self.id:
@@ -81,6 +82,14 @@ class Client(object):
                             thisPlayer.getNamedComponent("sprite").fileChange(str(thisPlayer.getNamedComponent("client").trainer)+".png")
                         except:
                              thisPlayer.addComponent(Sprite(str(i.strings[2])+".png","trainers\\","png"),"sprite")
+                        try:
+                            if(i.strings[4]==True):
+                                findByName("ready"+str(i.strings[0])).getNamedComponent("ready").fileChange("ready.gif")
+                            else:
+                                findByName("ready"+str(i.strings[0])).getNamedComponent("waiting").fileChange("ready.gif")
+                            findByName("ready"+str(i.strings[0])).getNamedComponent("ready").playing =True
+                        except:
+                            findByName("ready"+str(i.strings[0])).addComponent("waiting.gif","","gif"),"sprite")
                         try:
                             findByName("label"+str(i.strings[0])).getNamedComponent("text").text = str(i.strings[1])
                         except:
