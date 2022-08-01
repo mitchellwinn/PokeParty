@@ -105,7 +105,7 @@ def clientMsgInterpret(conn, addr, msg):
 				if k.id == msg.strings[0]:
 					k.trainer = msg.strings[1]
 					k.starter = msg.strings[2]
-					k.ready = msg.strigs[3]
+					k.ready = msg.strings[3]
 	#-----
 	#-----updates clients knowledge of all players in a room
 	elif msg.purpose=="GETUPDATES":

@@ -225,7 +225,7 @@ def updateDisplay():
 
 def drawSprites(sprite,gobj):
 	global screen, full, scale, w, h, frame
-	if frame % 5 == 0:	
+	if frame % 7 == 0:	
 		if sprite.fileType == "gif":
 			sprite.gifCheck()
 	img = pg.transform.scale(sprite.img, (sprite.img.get_rect().width*scale, sprite.img.get_rect().height*scale))

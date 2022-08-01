@@ -133,7 +133,7 @@ async def inRoom():
 	findByName("label"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Text(str(game.playerObject.getNamedComponent("client").name),"pokemon1.ttf"),"text")
 	game.gameObjects.append(GameObject("pokemon"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.255,game.windowDimensions[1]*0.855]))
 	findByName("pokemon"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite(str(game.playerObject.getNamedComponent("client").idstarter)+".png","pokemon\\","png"),"sprite")
-	game.gameObjects.append(GameObject("ready"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.125,game.windowDimensions[1]*0.925]))
+	game.gameObjects.append(GameObject("ready"+str(game.playerObject.getNamedComponent("client").id),[game.windowDimensions[0]*.145,game.windowDimensions[1]*0.8755]))
 	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite("waiting.gif","","gif"),"sprite")
 	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).getNamedComponent("sprite").looping=True
 	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).getNamedComponent("sprite").playing=True
