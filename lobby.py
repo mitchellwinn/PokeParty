@@ -10,15 +10,14 @@ from audio import playSound, playMusic, stopMusic
 import pygame as pg
 from client import Client, SimpleData
 
-def lobbyStart():
-	join()
+async def lobbyMain():
 	game.gameObjects.clear()
-
-def join():
-	time.sleep(.25)
+	await join()
+	
+async def join():
+	await asyncio.sleep(.25)
 	global roomName
 	roomName = ""
-	inputDone = False
 	stopMusic()
 	playMusic("NBtown.mp3")
 	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]/2.2]))
@@ -30,42 +29,33 @@ def join():
 	blinker = " "
 	i=0
 	user_text = ""
-	game.typeInput = ""
-	while inputDone==False:
-		if game.playerInputs[9] == True:
-			#game.inputs = game.inputsFalse
+	
+	while game.gameState=="lobby":
+		game.typeInput = ""
+		inputs = game.getPlayerInputsNow()
+		if inputs[9] == True:
 			stopMusic()
 			playSound("SFX_PRESS_AB.wav")
 			return
-		elif game.playerInputs[0] == True:
-			#game.inputs = game.inputsFalse
-			game.programLive = False
-			return
-		elif game.playerInputs[12] == True and len(user_text)>0:
-			#game.inputs = game.inputsFalse
+		elif inputs[12] == True and len(user_text)>0:
 			stopMusic()
 			playSound("SFX_PRESS_AB.wav")
 			inputDone=True
 			game.gameObjects.clear()
-			connectRoom(user_text)
-			game.gameState = "connectingToRoom"
+			await connectRoom(user_text)
 			return
-		elif game.playerInputs[13] == True:
-			#game.inputs = game.inputsFalse
+		elif inputs[13] == True:
 			user_text = user_text[0:-1]
 		elif game.typeInput != "":
 			user_text += game.typeInput
-			game.typeInput=""
 		findByName("titleText2").getNamedComponent("text").text = user_text+blinker
 		if game.frame%60>=30:
 			blinker = ""
 		elif game.frame%60>=0:
 			blinker = "l"
-		#game.inputs = game.inputsFalse
-		game.typeInput = ""
-		time.sleep(game.timestep)
+		await asyncio.sleep(game.timestep)
 
-def connectRoom(room):
+async def connectRoom(room):
 	global roomName
 	game.gameObjects.append(GameObject("titleText",[game.windowDimensions[0]/2,game.windowDimensions[1]*.5]))
 	findByName("titleText").addComponent(Text("PLEASE  WAIT","pokemon1.ttf"),"text")
@@ -82,7 +72,7 @@ def connectRoom(room):
 		game.playerObject.removeComponent("client")
 		findByName("titleText").getNamedComponent("text").text = "Failed to reach Server!"
 		playSound("SFX_PRESS_AB.wav")
-		time.sleep(.75)
+		await asyncio.sleep(.75)
 		game.gameObjects.clear()
 		return
 	game.gameObjects.clear()
@@ -99,16 +89,17 @@ def connectRoom(room):
 	else:
 		findByName("titleText").getNamedComponent("text").text = f"Error initializing room!"
 		playSound("SFX_PRESS_AB.wav")
-		time.sleep(.75)
+		await asyncio.sleep(.75)
 		#game.gameState = "title"
 		game.gameObjects.clear()
 		return
 	findByName("titleText2").getNamedComponent("text").text = f"{room}!"
 	findByName("titleText3").getNamedComponent("text").text = f"{len(game.allPlayers)+1} players so far."
 	playSound("SFX_HEAL_AILMENT.wav")
-	time.sleep(2.5)
+	await asyncio.sleep(2.5)
 	roomName = game.playerObject.getNamedComponent("client").room
-	asyncio.run(inRoom())
+	await inRoom()
+	
 
 async def inRoom():
 	global roomName, ready
@@ -137,13 +128,17 @@ async def inRoom():
 	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).getNamedComponent("sprite").looping=True
 	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).getNamedComponent("sprite").playing=True
 	i=0
-	while inputDone==False:
+	await roomSettings()
+
+async def roomSettings():
+	while game.gameState==inRoom:
+		time1=time.time()
+		inputs = game.getPlayerInputsNow()
 		if game.playerObject.getNamedComponent("client").ready:
 			ready = True
 		else:
 			ready = False
-		if game.playerInputs[9]==True:
-			await asyncio.sleep(.1)
+		if inputs[9]==True:#go back to title
 			stopMusic()
 			game.playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[game.playerObject.getNamedComponent("client").id]).getAsDataString(),False)
 			game.playerObject.removeComponent("client")
@@ -152,10 +147,8 @@ async def inRoom():
 			game.gameState = "title"
 			game.gameObjects.clear()
 			game.allPlayers.clear()
-			inputDone = True
 			return
-		elif game.playerInputs[14]==True:
-			await asyncio.sleep(.035)
+		elif inputs[14]==True:#ready or unready
 			thisClient = game.playerObject.getNamedComponent("client")
 			if thisClient.ready:
 				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("waiting.gif")
@@ -164,29 +157,21 @@ async def inRoom():
 				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("ready.gif")
 				thisClient.ready = True
 			findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").playing = True
-			
-			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
-			#playSound("SFX_PRESS_AB.wav")
-		elif game.playerInputs[1]==True and ready == False:
-			await asyncio.sleep(.035)
+		elif inputs[1]==True and ready == False:
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.trainer+=1
 			if(thisClient.trainer>game.TRAINERS):
 				thisClient.trainer=1
 			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
-			#playSound("SFX_PRESS_AB.wav")
-		elif game.playerInputs[2]==True and ready == False:
-			await asyncio.sleep(.035)
+		elif inputs[2]==True and ready == False:
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.trainer+=-1
 			if(thisClient.trainer<1):
 				thisClient.trainer=game.TRAINERS
 			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
-			#playSound("SFX_PRESS_AB.wav")
-		elif game.playerInputs[3]==True and ready == False:
-			await asyncio.sleep(.035)
+		elif  inputs[3]==True and ready == False:
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.starter+=-1
 			if(thisClient.starter<0):
@@ -194,9 +179,7 @@ async def inRoom():
 			thisClient.idstarter=game.starterList[thisClient.starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(thisClient.idstarter)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
-			#playSound("SFX_PRESS_AB.wav")
-		elif game.playerInputs[4]==True and ready == False:
-			await asyncio.sleep(.035)
+		elif  inputs[4]==True and ready == False:
 			thisClient = game.playerObject.getNamedComponent("client")
 			thisClient.starter+=1
 			if(thisClient.starter>5):
@@ -204,13 +187,12 @@ async def inRoom():
 			thisClient.idstarter=game.starterList[thisClient.starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(thisClient.idstarter)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
-			#playSound("SFX_PRESS_AB.wav")
 		if ready==False:
 			findByName("titleText2").getNamedComponent("text").text = "Press 'R' to READY"
 		else:
 			findByName("titleText2").getNamedComponent("text").text = "READY!"
-		
-		i+=1
+		time2 = time.time()
+		i+= (time2-time1)
 		if i>60:
 			i=0
 		if i>=40:
@@ -219,4 +201,5 @@ async def inRoom():
 			findByName("titleText").getNamedComponent("text").text = "Waiting for players.."
 		elif i>=0:
 			findByName("titleText").getNamedComponent("text").text = "Waiting for players."
-		await asyncio.sleep(game.timestep)
+		await asyncio.sleep(0)
+	

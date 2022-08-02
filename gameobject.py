@@ -22,7 +22,7 @@ class GameObject(object):
 		elif len(args)==4:
 			self.name = args[0]
 			self.transform = transform.Transform(args[1],args[2],args[3])
-		#print("new GameObject "+self.name+" initialized at:\n"+str(self.transform.position))
+		print("new GameObject "+self.name+" initialized at:\n"+str(self.transform.position))
 		self.networkID=-1
 
 	def addComponent(self, component, name):

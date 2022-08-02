@@ -11,8 +11,9 @@ from audio import stopMusic
 
 #all global variables to be used by game
 def __init__():
-	global TRAINERS, lobbyThread, gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject, starterList, allPlayers, gameVolume, iconShow
-	lobbyThread = None
+	global TRAINERS, gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject, starterList, allPlayers, gameVolume, iconShow
+	pg.init()
+	clientThread = None
 	TRAINERS = 36
 	iconShow = 0
 	myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
@@ -32,99 +33,92 @@ def __init__():
 	border = pg.transform.scale(border, (border.get_rect().width*4, border.get_rect().height*4))
 	#update playrInput global variable to be used throughout program
 
-async def playerInputsGet():
-	global typeInput, playerInputs, timestep, programLive
-	print("called playerInputsGet()")
-	num = 0
+async def generalInputs():
+	global timestep, programLive
 	while programLive:
-		try:
-			if(playerObject.getNamedComponent("client").updating):
-				await asyncio.sleep(timestep)
-		except:
-			True
-		if num%4 == 0:
-			#print("setFalse")
-			playerInputs = [False,False,False,False,False,False,False,False,False,False,False,False,False,False,False]
-		events = pg.event.get()
-		for event in events:
+		inputs = getPlayerInputsNow()
+		if inputs[0]==True:
+			programLive = False
+		if inputs[5]==True:
+			zoom(1)
+		elif inputs[6]==True:
+			zoom(-1)
+		if inputs[10]==True:
+			asyncio.create_task(volumeMod(1))
+		elif inputs[11]==True:
+			asyncio.create_task(volumeMod(-1))
+		if inputs[8]==True:
+			fullscreen()
+		await asyncio.sleep(0)
+
+def getPlayerInputsNow():
+	global typeInput, events
+	try:
+		events
+	except:
+		return
+	theInputs = [False,False,False,False,False,False,False,False,False,False,False,False,False,False,False]
+	for event in events:
 			if event.type == pg.KEYDOWN:
 				typeInput = event.unicode
 				if event.key == pg.K_ESCAPE:
-					print("Pressed ESC")
 					typeInput = ""
-					playerInputs[0] = True
-				elif event.key == pg.K_UP:
-					playerInputs[1] = True
-				elif event.key == pg.K_DOWN:
-					playerInputs[2] = True
-				elif event.key == pg.K_LEFT:
-					playerInputs[3] = True
-				elif event.key == pg.K_RIGHT:
-					playerInputs[4] = True
-				elif event.key == pg.K_RIGHTBRACKET:
+					theInputs[0] = True
+				if event.key == pg.K_UP:
+					theInputs[1] = True
+				if event.key == pg.K_DOWN:
+					theInputs[2] = True
+				if event.key == pg.K_LEFT:
+					theInputs[3] = True
+				if event.key == pg.K_RIGHT:
+					theInputs[4] = True
+				if event.key == pg.K_RIGHTBRACKET:
 					typeInput = ""
-					playerInputs[5] = True
-				elif event.key == pg.K_LEFTBRACKET:
+					theInputs[5] = True
+				if event.key == pg.K_LEFTBRACKET:
 					typeInput = ""
-					playerInputs[6] = True
-				elif event.key == pg.K_z:
-					playerInputs[7] = True
-				elif event.key == pg.K_F11:
+					theInputs[6] = True
+				if event.key == pg.K_z:
+					theInputs[7] = True
+				if event.key == pg.K_F11:
 					typeInput = ""
-					playerInputs[8] = True
-				elif event.key == pg.K_BACKQUOTE:
+					theInputs[8] = True
+				if event.key == pg.K_BACKQUOTE:
 					typeInput = ""
-					playerInputs[9] = True
-				elif event.key == pg.K_PAGEUP:
+					theInputs[9] = True
+				if event.key == pg.K_PAGEUP:
 					typeInput = ""
-					playerInputs[10] = True
-				elif event.key == pg.K_PAGEDOWN:
+					theInputs[10] = True
+				if event.key == pg.K_PAGEDOWN:
 					typeInput = ""
-					playerInputs[11] = True
-				elif event.key == pg.K_RETURN:
-					playerInputs[12] = True
+					theInputs[11] = True
+				if event.key == pg.K_RETURN:
+					theInputs[12] = True
 					typeInput = ""
-				elif event.key == pg.K_BACKSPACE:
+				if event.key == pg.K_BACKSPACE:
 					typeInput = ""
-					playerInputs[13] = True
-				elif event.key == pg.K_r:
-					playerInputs[14] = True
-		#print(str(playerInputs))
-		num+=1
-		await asyncio.sleep(timestep)
+					theInputs[13] = True
+				if event.key == pg.K_r:
+					theInputs[14] = True
+	return theInputs
 
 #main operations of pygame
 async def gameMain():
 	#gameMain is called once
-	global gameObjects, timestep, playerInputs, programLive, windowDimensions, screen, scale, gameState, frame , INPUTSFALSE, inputs
+	global gameObjects, timestep, programLive, windowDimensions, screen, scale, gameState, frame , INPUTSFALSE, inputs, events
 	#pygame window is initialized with base dimensions
-	pg.init()
+	
 	img = pg.image.load('sprites\\windowIcon.png')
 	pg.display.set_icon(img)
 	pg.display.set_caption('PokeParty')
 	screen = pg.display.set_mode(size=(windowDimensions[0]*scale, windowDimensions[1]*scale), flags=0, depth=0, display=0, vsync=0)
 	gameState = "title"
 	#as long as we are still running the program it is live
-	asyncio.create_task(playerInputsGet())
+	#asyncio.create_task(playerInputsGet())
 	await asyncio.sleep(timestep)
-	while programLive:
-		if playerInputs[0]==True:
-			programLive = False
-		if playerInputs[5]==True:
-			zoom(1)
-			await asyncio.sleep(.035)
-		elif playerInputs[6]==True:
-			zoom(-1)
-			await asyncio.sleep(.035)
-		if playerInputs[10]==True:
-			asyncio.create_task(volumeMod(1))
-			await asyncio.sleep(.035)
-		elif playerInputs[11]==True:
-			asyncio.create_task(volumeMod(-1))
-			await asyncio.sleep(.035)
-		if playerInputs[8]==True:
-			fullscreen()
-
+	asyncio.create_task(generalInputs())
+	while(programLive):
+		events = pg.event.get()
 		#game is computed at 60fps
 		updateDisplay()
 		await asyncio.sleep(timestep)

@@ -5,8 +5,6 @@ from gameobject import GameObject, findByName
 from sprite import Sprite
 from text import Text
 from audio import playSound, playMusic, stopMusic
-from lobby import lobbyStart
-from threading import Thread
 
 async def titleGo():
 	#print("Triggered titleGo from game.py")
@@ -39,44 +37,36 @@ async def titleMenu():
 	findByName("pointer").addComponent(Sprite("pointer.png",""),"sprite")
 	findByName("menu1").addComponent(Text("PLAY","pokemon1.ttf"),"text")
 	findByName("menu2").addComponent(Text("EXIT","pokemon1.ttf"),"text")
-	await asyncio.sleep(.25)
 	playMusic("08 Cerulean City's Theme.mp3")
 	choice = 0
 	while game.gameState == "title":
-		if(game.playerInputs[1]==True):
-			#game.inputs = game.inputsFalse
+		inputs = game.getPlayerInputsNow()
+		if(inputs[1]==True):
 			choice-=1
-		elif(game.playerInputs[2]==True):
-			#game.inputs = game.inputsFalse
+		elif(inputs[2]==True):
 			choice+=1
 		if choice>1:
 			choice = 1
 		if choice<0:
 			choice = 0
-		if game.playerInputs[7]==True:
-			#game.inputs = game.inputsFalse
+		if inputs[7]==True:
 			playSound("SFX_PRESS_AB.wav")
 			game.gameObjects.clear()
 			if choice==0:
 				game.gameState = "lobby"
-				print("aTtempting start lobbyThread")
-				game.lobbyThread = Thread(target=lobbyStart)
-				game.lobbyThread.start()
-				print("started lobbyThread")
 				return
 			if choice==1:
 				await asyncio.sleep(.25)
 				game.programLive = False
 				return
 		findByName("pointer").transform.position = [game.windowDimensions[0]*.725,game.windowDimensions[1]*(.715+(choice*.075))]
-		await asyncio.sleep(game.timestep)
+		await asyncio.sleep(0)
 	findByName("menu1").destroy()
 	findByName("menu2").destroy()
 
 async def cyclePokemon():
 	findByName("titlePokemon").addComponent(Sprite(str(random.randint(1,251))+".gif","pokemon\\","gif"),"sprite")
 	while game.gameState == "title":
-		
 		asyncio.create_task(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*.45,game.windowDimensions[1]*.775],.45))
 		await(findByName("titleTrainer").transform.smoothMoveOverTime([game.windowDimensions[0]*.165,game.windowDimensions[1]*.775],.45))
 		await asyncio.sleep(.3)
@@ -84,11 +74,11 @@ async def cyclePokemon():
 			return
 		findByName("titlePokemon").getNamedComponent("sprite").playing = True
 		await asyncio.sleep(2)
-		if(game.gameState != "title"):
+		try:
+			asyncio.create_task(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],.9))
+			await(findByName("titleTrainer").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],1.1))
+		except:
 			return
-		
-		asyncio.create_task(findByName("titlePokemon").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],.9))
-		await(findByName("titleTrainer").transform.smoothMoveOverTime([game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775],1.1))
 		try:
 			findByName("titlePokemon").transform.position=[game.windowDimensions[0]*-.25,game.windowDimensions[1]*.775]
 		except:

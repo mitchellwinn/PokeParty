@@ -113,6 +113,7 @@ class Client(object):
 
 
     def send(self, data, wait):
+        time1 = time.time()
         try:
             #send desired communication to server
             self.client.send(data)
@@ -123,7 +124,7 @@ class Client(object):
             try:
                 reply = self.client.recv(self.header)
             except:
-                print(f"[SOCKET ERROR]: {e}")
+                return 0
             print(f"Got response from server!")
             reply = pickle.loads(reply)
             print(f"Purpose: {reply.purpose}")
@@ -131,7 +132,10 @@ class Client(object):
             self.serverMsgInterpret(reply)
         except socket.error as e:
             print(f"[SOCKET ERROR]: {e}")
-            return -1
+            return 0
+        time2 = time.time()
+        deltaTime = time2 - time1
+        return deltaTime
 
     def __init__(self, room):
         self.connected = "UNDECIDED"
