@@ -1,10 +1,11 @@
+import sys
 import socket
 import pickle
+from threading import Thread
 from room import Room
 from gameobject import GameObject
 from client import SimpleData, Client
-from threading import Thread
-import sys
+
 
 def startServer():
 	global rooms, DISCONNECT_MESSAGE, s, HEADER

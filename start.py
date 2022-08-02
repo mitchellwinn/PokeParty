@@ -2,11 +2,11 @@
 #RUN THIS SCRIPT TO PLAY!!!
 #------------------------------
 import game
+import asyncio
 from gameobject import GameObject, findByName
+from title import titleGo, titleMenu
 from lobby import lobbyMain
 #from boardgamelogic import boardgameMain
-import asyncio
-from title import titleGo, titleMenu
 
 async def taskMain():
 	game.__init__()
