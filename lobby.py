@@ -36,7 +36,6 @@ def join():
 			#game.inputs = game.inputsFalse
 			stopMusic()
 			playSound("SFX_PRESS_AB.wav")
-			game.gameObjects.clear()
 			return
 		elif game.playerInputs[0] == True:
 			#game.inputs = game.inputsFalse

@@ -59,11 +59,10 @@ async def titleMenu():
 			game.gameObjects.clear()
 			if choice==0:
 				game.gameState = "lobby"
-				thread = Thread(target=lobbyStart)
-				thread.start()
-				while thread.is_alive():
-					await asyncio.sleep(0)
-				game.gameState = "title"
+				print("aTtempting start lobbyThread")
+				game.lobbyThread = Thread(target=lobbyStart)
+				game.lobbyThread.start()
+				print("started lobbyThread")
 				return
 			if choice==1:
 				await asyncio.sleep(.25)

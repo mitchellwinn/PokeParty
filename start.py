@@ -13,18 +13,29 @@ async def taskMain():
 	await asyncio.sleep(0.1)
 	asyncio.create_task(game.gameMain())
 	#on bootup main defers to the title sequence and then suspends processing until title sequence complete
-	print("Attempting titleGo()")
-	await titleGo()
-	print("Awaiting termination: press ESC")
-	await titleMenu()
+	game.gameState="title"
 	while(game.programLive):
 		if game.gameState=="title":
 			game.frame = 0
 			await titleGo()
 			await titleMenu()
+			#print("title menu done")
+			if game.lobbyThread.is_alive():
+				#print("alive")
+			else:
+				#print("thread not alive")
+			while game.lobbyThread.is_alive():
+				#print("alive")
+				await asyncio.sleep(game.timestep/2)
 			#await boardgameMain()
+			game.gameState = "title"
+			game.gameObjects.clear()
+			game.tryDisconnect()
+			game.playerObject = GameObject("player",[game.windowDimensions[0]/2,game.windowDimensions[1]/2])
+		else:
+			print("gameState not title")
+		await asyncio.sleep(.25)
 
-		await asyncio.sleep(0)
 	quit()
 
 

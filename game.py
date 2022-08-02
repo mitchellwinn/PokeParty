@@ -11,7 +11,8 @@ from audio import stopMusic
 
 #all global variables to be used by game
 def __init__():
-	global TRAINERS, gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject, starterList, allPlayers, gameVolume, iconShow
+	global TRAINERS, lobbyThread, gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject, starterList, allPlayers, gameVolume, iconShow
+	lobbyThread = None
 	TRAINERS = 36
 	iconShow = 0
 	myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
@@ -41,7 +42,7 @@ async def playerInputsGet():
 				await asyncio.sleep(timestep)
 		except:
 			True
-		if num%3 == 0:
+		if num%4 == 0:
 			#print("setFalse")
 			playerInputs = [False,False,False,False,False,False,False,False,False,False,False,False,False,False,False]
 		events = pg.event.get()
@@ -130,11 +131,14 @@ async def gameMain():
 		frame+=1
 	stopMusic()
 	pg.display.quit()
+	tryDisconnect()
+	quit()
+
+def tryDisconnect():
 	try:
 		playerObject.getNamedComponent("client").send(SimpleData("!DISCONNECT",[playerObject.getNamedComponent("client").id]).getAsDataString(),False)
 	except:
 		print("Failed to send !DISCONNECT message")
-	quit()
 
 async def volumeMod(amount):
 	global volume, gameVolume, iconShow

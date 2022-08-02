@@ -19,6 +19,7 @@ class Sprite(object):
 
 	def fileChange(self, file):
 		self.file=file
+		self.frame = 0
 		if file.count(".gif")==	0:
 			self.fileType = "png"
 			self.img = pg.image.load(self.filePath+self.file)
