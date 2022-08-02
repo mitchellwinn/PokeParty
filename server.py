@@ -10,7 +10,7 @@ from client import SimpleData, Client
 def startServer():
 	global rooms, DISCONNECT_MESSAGE, s, HEADER
 	rooms = []
-	HEADER = 2048
+	HEADER = 256
 	SERVER = ''
 	PORT = 1234
 	DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -66,6 +66,16 @@ def clientMsgInterpret(conn, addr, msg):
 		for i in rooms:
 			if i.name == msg.strings[0]:
 				thisRoom = i
+				if len(thisRoom.players)>=4:
+					print(f"The requested room {msg.strings[0]} is full...")
+					response = SimpleData("!DISCONNECT",[msg.strings[0]])
+					send(conn ,response.getAsDataString())
+					return connected
+				if thisRoom.started==True:
+					print(f"The requested room {msg.strings[0]} is already in session...")
+					response = SimpleData("!DISCONNECT",[msg.strings[0]])
+					send(conn ,response.getAsDataString())
+					return connected
 				print(f"The requested room {msg.strings[0]} already exists...")
 				roomAlreadyExists = True
 		if roomAlreadyExists == False:

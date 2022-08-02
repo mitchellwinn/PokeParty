@@ -141,7 +141,7 @@ class Client(object):
         self.connected = "UNDECIDED"
         self.ready=False
         self.name = os.getlogin( )[0:os.getlogin( ).find(" ")]
-        self.header = 2048
+        self.header = 256
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = '173.255.244.44'
         self.port = 1234
@@ -161,8 +161,8 @@ class Client(object):
     def getUpdates(self):
         print("hi")
         while True:
-            time.sleep(.75)
-            toSend = SimpleData("GETUPDATES",[self.room])
+            time.sleep(1)
+            toSend = SimpleData("GETUPDATES",[self.room,self.header])
             try:
                 self.send (toSend.getAsDataString(),True)
             except socket.error as e:

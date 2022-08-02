@@ -11,7 +11,9 @@ from audio import stopMusic
 
 #all global variables to be used by game
 def __init__():
-	global TRAINERS, gameObjects, timestep, playerInputs, programLive, windowDimensions, scale, volume, full, frame, border, playerObject, starterList, allPlayers, gameVolume, iconShow
+	global TRAINERS, starterList
+	global timestep, playerObject, gameObjects, allPlayers, programLive, windowDimensions
+	global volume, gameVolume, iconShow, scale, full, frame, border
 	pg.init()
 	clientThread = None
 	TRAINERS = 36
