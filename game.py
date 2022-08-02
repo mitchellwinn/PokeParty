@@ -49,7 +49,7 @@ async def generalInputs():
 			asyncio.create_task(volumeMod(-1))
 		if inputs[8]==True:
 			fullscreen()
-		await asyncio.sleep(0)
+		await asyncio.sleep(timestep)
 
 def getPlayerInputsNow():
 	global typeInput, events

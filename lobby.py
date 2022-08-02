@@ -127,14 +127,16 @@ async def inRoom():
 	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).addComponent(Sprite("waiting.gif","","gif"),"sprite")
 	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).getNamedComponent("sprite").looping=True
 	findByName("ready"+str(game.playerObject.getNamedComponent("client").id)).getNamedComponent("sprite").playing=True
-	i=0
 	await roomSettings()
 
 async def roomSettings():
-	while game.gameState==inRoom:
+	i=0
+	print("roomSettings")
+	while game.gameState=="inRoom":
 		time1=time.time()
 		inputs = game.getPlayerInputsNow()
-		if game.playerObject.getNamedComponent("client").ready:
+		thisClient = game.playerObject.getNamedComponent("client")
+		if thisClient.ready:
 			ready = True
 		else:
 			ready = False
@@ -148,8 +150,7 @@ async def roomSettings():
 			game.gameObjects.clear()
 			game.allPlayers.clear()
 			return
-		elif inputs[14]==True:#ready or unready
-			thisClient = game.playerObject.getNamedComponent("client")
+		if inputs[14]==True:#ready or unready
 			if thisClient.ready:
 				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("waiting.gif")
 				thisClient.ready = False
@@ -157,36 +158,36 @@ async def roomSettings():
 				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("ready.gif")
 				thisClient.ready = True
 			findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").playing = True
-		elif inputs[1]==True and ready == False:
-			thisClient = game.playerObject.getNamedComponent("client")
+		if inputs[1]==True and ready == False:
 			thisClient.trainer+=1
 			if(thisClient.trainer>game.TRAINERS):
 				thisClient.trainer=1
 			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
-		elif inputs[2]==True and ready == False:
-			thisClient = game.playerObject.getNamedComponent("client")
+		if inputs[2]==True and ready == False:
 			thisClient.trainer+=-1
 			if(thisClient.trainer<1):
 				thisClient.trainer=game.TRAINERS
 			game.playerObject.getNamedComponent("sprite").fileChange(str(thisClient.trainer)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
-		elif  inputs[3]==True and ready == False:
-			thisClient = game.playerObject.getNamedComponent("client")
+		if  inputs[3]==True and ready == False:
 			thisClient.starter+=-1
 			if(thisClient.starter<0):
 				thisClient.starter=5
 			thisClient.idstarter=game.starterList[thisClient.starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(thisClient.idstarter)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
-		elif  inputs[4]==True and ready == False:
-			thisClient = game.playerObject.getNamedComponent("client")
+			print(thisClient.starter)
+			print(thisClient.idstarter)
+		if  inputs[4]==True and ready == False:
 			thisClient.starter+=1
 			if(thisClient.starter>5):
 				thisClient.starter=0
 			thisClient.idstarter=game.starterList[thisClient.starter]
 			findByName("pokemon"+str(thisClient.id)).getNamedComponent("sprite").fileChange(str(thisClient.idstarter)+".png")
 			game.playerObject.getNamedComponent("client").send(SimpleData("UPDATE",[thisClient.id,thisClient.trainer,thisClient.starter,thisClient.ready]).getAsDataString(),False)
+			print(thisClient.starter)
+			print(thisClient.idstarter)
 		if ready==False:
 			findByName("titleText2").getNamedComponent("text").text = "Press 'R' to READY"
 		else:
@@ -201,5 +202,5 @@ async def roomSettings():
 			findByName("titleText").getNamedComponent("text").text = "Waiting for players.."
 		elif i>=0:
 			findByName("titleText").getNamedComponent("text").text = "Waiting for players."
-		await asyncio.sleep(0)
+		await asyncio.sleep(game.timestep)
 	

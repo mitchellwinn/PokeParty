@@ -60,7 +60,7 @@ async def titleMenu():
 				game.programLive = False
 				return
 		findByName("pointer").transform.position = [game.windowDimensions[0]*.725,game.windowDimensions[1]*(.715+(choice*.075))]
-		await asyncio.sleep(0)
+		await asyncio.sleep(game.timestep)
 	findByName("menu1").destroy()
 	findByName("menu2").destroy()
 

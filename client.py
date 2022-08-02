@@ -118,13 +118,13 @@ class Client(object):
             #send desired communication to server
             self.client.send(data)
             if wait==False:
-                return
+                return -1
             print(f"Sent data to server!\nWaiting on response...!")
             #get desired communication from server
             try:
                 reply = self.client.recv(self.header)
             except:
-                return 0
+                return -1
             print(f"Got response from server!")
             reply = pickle.loads(reply)
             print(f"Purpose: {reply.purpose}")
@@ -132,7 +132,7 @@ class Client(object):
             self.serverMsgInterpret(reply)
         except socket.error as e:
             print(f"[SOCKET ERROR]: {e}")
-            return 0
+            return -1
         time2 = time.time()
         deltaTime = time2 - time1
         return deltaTime
