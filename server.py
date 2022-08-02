@@ -8,7 +8,7 @@ from threading import Thread
 def startServer():
 	global rooms, DISCONNECT_MESSAGE, s, HEADER
 	rooms = []
-	HEADER = 4096/2
+	HEADER = 2048
 	SERVER = ''
 	PORT = 1234
 	DISCONNECT_MESSAGE = "!DISCONNECT"
