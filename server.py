@@ -116,6 +116,7 @@ def clientMsgInterpret(conn, addr, msg):
 					players.append(SimpleData("ONLINEPLAYER",[k.id,k.name,k.trainer,k.starter,k.ready]))
 				response = SimpleData("GETUPDATES",players)
 				try:
+					print(str(sys.getsizeof(response)))
 					send(conn ,response.getAsDataString())
 				except socket.error as e:
 					print(f"failed to send a response... error:{e}")
