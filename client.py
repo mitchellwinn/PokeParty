@@ -141,7 +141,7 @@ class Client(object):
         self.connected = "UNDECIDED"
         self.ready=False
         self.name = os.getlogin( )[0:os.getlogin( ).find(" ")]
-        self.header = 4096
+        self.header = 4096/2
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = '173.255.244.44'
         self.port = 1234

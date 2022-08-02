@@ -151,12 +151,15 @@ async def roomSettings():
 			game.allPlayers.clear()
 			return
 		if inputs[14]==True:#ready or unready
+
 			if thisClient.ready:
 				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("waiting.gif")
 				thisClient.ready = False
+				playSound("SFX_ENTER_PC.wav")
 			else:
 				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("ready.gif")
 				thisClient.ready = True
+				playSound("SFX_DEX_PAGE_ADDED.wav")
 			findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").playing = True
 		if inputs[1]==True and ready == False:
 			thisClient.trainer+=1
