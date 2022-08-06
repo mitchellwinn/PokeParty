@@ -9,6 +9,7 @@ from threading import Thread
 from gameobject import GameObject, findByName
 from sprite import Sprite
 from text import Text
+#import boardgame
 
 
 
@@ -74,7 +75,11 @@ class Client(object):
                     thisPlayer.getNamedComponent("client").name = i.strings[1]
                     thisPlayer.getNamedComponent("client").trainer = i.strings[2]
                     thisPlayer.getNamedComponent("client").starter = i.strings[3]
-                    thisPlayer.getNamedComponent("client").ready = i.strings[4]
+                    thisPlayer.inGame = i.strings[5]
+                    if thisPlayer.inGame==True:
+                        thisPlayer.getNamedComponent("client").ready = TRUE
+                    else:
+                        thisPlayer.getNamedComponent("client").ready = i.strings[4]
                     thisPlayer.getNamedComponent("client").idstarter = game.starterList[i.strings[3]]
                     #Update Room Trainer Pokemon and Label
                     if game.gameState=="inRoom":
@@ -140,6 +145,7 @@ class Client(object):
     def __init__(self, room):
         self.connected = "UNDECIDED"
         self.ready=False
+        self.inGame=False
         self.name = os.getlogin( )[0:os.getlogin( ).find(" ")]
         self.header = 256
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -188,5 +194,7 @@ class Client(object):
         self.send (toSend.getAsDataString(),True)
         thread = Thread(target=self.getUpdates)
         thread.start()
+
+
 
 

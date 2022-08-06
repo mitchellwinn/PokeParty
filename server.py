@@ -118,6 +118,15 @@ def clientMsgInterpret(conn, addr, msg):
 					k.trainer = msg.strings[1]
 					k.starter = msg.strings[2]
 					k.ready = msg.strings[3]
+			allReady = False
+			if(len(i.players)>1):
+				allReady = True
+				for k in i.players:
+					if k.ready == False:
+						allReady=False
+			if allReady==True:
+				i.started = True
+				
 	#-----
 	#-----updates clients knowledge of all players in a room
 	elif msg.purpose=="GETUPDATES":
@@ -125,7 +134,7 @@ def clientMsgInterpret(conn, addr, msg):
 		for i in rooms:
 			if i.name == msg.strings[0]:
 				for k in i.players:
-					players.append(SimpleData("ONLINEPLAYER",[k.id,k.name,k.trainer,k.starter,k.ready]))
+					players.append(SimpleData("ONLINEPLAYER",[k.id,k.name,k.trainer,k.starter,k.ready,i.started]))
 				response = SimpleData("GETUPDATES",players)
 				try:
 					print(str(sys.getsizeof(response)))

@@ -21,8 +21,8 @@ async def taskMain():
 			await titleGo()
 			await titleMenu()
 			await lobbyMain()
-			print("done")
 			#await boardgameMain()
+			print("done")
 			game.gameState = "title"
 			game.gameObjects.clear()
 			game.tryDisconnect()

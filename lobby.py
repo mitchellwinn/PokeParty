@@ -132,10 +132,10 @@ async def inRoom():
 async def roomSettings():
 	i=0
 	print("roomSettings")
-	while game.gameState=="inRoom":
+	thisClient = game.playerObject.getNamedComponent("client")
+	while thisClient.inGame==False:
 		time1=time.time()
 		inputs = game.getPlayerInputsNow()
-		thisClient = game.playerObject.getNamedComponent("client")
 		if thisClient.ready:
 			ready = True
 		else:
@@ -150,7 +150,7 @@ async def roomSettings():
 			game.gameObjects.clear()
 			game.allPlayers.clear()
 			return
-		if inputs[14]==True:#ready or unready
+		if inputs[14]==True and thisClient.inGame==False:#ready or unready
 
 			if thisClient.ready:
 				findByName("ready"+str(thisClient.id)).getNamedComponent("sprite").fileChange("waiting.gif")
@@ -206,4 +206,10 @@ async def roomSettings():
 		elif i>=0:
 			findByName("titleText").getNamedComponent("text").text = "Waiting for players."
 		await asyncio.sleep(game.timestep)
+	while(game.gameState=="inRoom"):
+		findByName("titleText").getNamedComponent("text").text = "THE GAME IS"
+		findByName("titleText2").getNamedComponent("text").text = "ABOUT TO BEGIN!"
+		findByName("titleText3").addComponent(Text("THANK YOU FOR WAITING","pokemon1.ttf"),"text")
+		await asyncio.sleep(2)
+		game.gameState=="inGame"
 	
